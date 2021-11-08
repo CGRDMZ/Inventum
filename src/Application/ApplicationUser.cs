@@ -9,7 +9,7 @@ namespace Application
         public bool IsEmailConfirmed { get; set; }
         public string Password { get; set; }
 
-        private ApplicationUser() {}
+        public ApplicationUser() {}
 
         public ApplicationUser(string username, string email, string password)
         {

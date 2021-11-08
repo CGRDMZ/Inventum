@@ -6,6 +6,8 @@ namespace Domain
 {
     public class Board
     {
+
+
         public Guid BoardId { get; private set; }
         public string Name { get; private set; }
         public Color BgColor {get; private set; }
@@ -13,7 +15,6 @@ namespace Domain
 
         private List<CardGroup> cardGroups = new List<CardGroup>();
         public ReadOnlyCollection<CardGroup> CardGroups => cardGroups.AsReadOnly();
-
 
         private Board() {}
 
