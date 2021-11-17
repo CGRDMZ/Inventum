@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application;
 using Application.Commands;
 using Application.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -10,15 +11,15 @@ namespace WebApi.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class BoardController: ControllerBase {
-        private IAsyncCommandHandler<OpenNewBoardCommand, Guid> _handler;
+        private IMediator _mediator;
 
-        public BoardController(IAsyncCommandHandler<OpenNewBoardCommand, Guid> handler) {
-            _handler = handler;
+        public BoardController(IMediator mediator) {
+            _mediator = mediator;
         }
         
         [HttpPost]
         public async Task<Guid> CreateBoard() {
-            return await _handler.Handle(new OpenNewBoardCommand(Guid.NewGuid().ToString(), "first board", "#121212"));
+            return await _mediator.Send(new OpenNewBoardCommand("", "", ""));
         }
     }
 }

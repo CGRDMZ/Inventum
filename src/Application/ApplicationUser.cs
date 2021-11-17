@@ -4,6 +4,7 @@ namespace Application
 {
     public class ApplicationUser {
         public Guid Id { get; set; }
+        public Guid DomainUserId { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public bool IsEmailConfirmed { get; set; }
@@ -19,5 +20,11 @@ namespace Application
             IsEmailConfirmed = false;
             Password = password;
         }
+
+        public static ApplicationUser New(string username, string email, string password) {
+            return new ApplicationUser(username, email, password);
+        }
+
+        
     }
 }
