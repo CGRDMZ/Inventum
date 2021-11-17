@@ -19,19 +19,19 @@ namespace Domain
             BelongsTo = belongsTo;
         }
 
-        public void ChangeColorTo(Color? color)
+        public void ChangeColorTo(Color color)
         {
             if (color == null)
             {
                 throw new ArgumentException(nameof(color));
             }
 
-            Color = color.GetValueOrDefault();
+            Color = color;
         }
 
         public static Card CreateNew(CardGroup group)
         {
-            return new Card("This is where you write the content of this card.", Color.White, group);
+            return new Card("This is where you write the content of this card.", Color.Constants.White, group);
         }
     }
 }
