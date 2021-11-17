@@ -7,13 +7,9 @@ namespace Application.Commands
     public class OpenNewBoardCommand : ICommand, IRequest<Guid>
     {
 
-        public string UserId { get; }
-        public string Name { get; }
+        public string UserId { get; init; }
+        public string Name { get; init; }
 
-        public OpenNewBoardCommand(string userId, string name, string backgroundColorRGB)
-        {
-            UserId = userId;
-        }
 
     }
 }

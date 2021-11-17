@@ -1,14 +1,18 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using Application.Interfaces;
-using MediatR;
 
-namespace Application.Commands
+namespace WebApi.Models
 {
-    public class CreateNewUserCommand : ICommand, IRequest<Guid>
+    public class CreateNewUserRequest
     {
+        [Required]
+        [MinLength(5)]
         public string Username { get; init; }
+
+        [Required]
+        [EmailAddress]
         public string Email { get; init; }
+
+        [Required]
         public string Password { get; init; }
         
     }
