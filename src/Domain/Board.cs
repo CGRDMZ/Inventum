@@ -36,7 +36,7 @@ namespace Domain
         }
 
         public static Board CreateEmptyBoard(User owner) {
-            return new Board("New Board", Color.White, owner);
+            return new Board("New Board", Color.Constants.White, owner);
         }
     }
 }
