@@ -13,13 +13,12 @@ namespace Domain
 
         public User() {}
 
-        public User(string username) {
+        public User(Guid userId, string username) {
             if (username.Length < 5) {
                 throw new ArgumentException("Username cannot be smaller than 5 letters.");
             }
 
 
-            UserId = Guid.NewGuid();
             Username = username;
             Boards = new List<Board>();
         }
@@ -29,6 +28,10 @@ namespace Domain
             Board board = Board.CreateEmptyBoard(this);
 
             Boards.Add(board);
+        }
+
+        public static User New(Guid id, string username) {
+            return new User(id, username);
         }
     }
 }

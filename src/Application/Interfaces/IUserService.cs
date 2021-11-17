@@ -1,8 +1,11 @@
+using System;
+using System.Threading.Tasks;
 using Application.Commands;
 
 namespace Application.Interfaces
 {
     public interface IUserService {
-        bool CreateNewUser(CreateNewUserCommand command);
+        Task<Guid> CreateNewUser(CreateNewUserCommand command);
+        Task<ApplicationUser> GetApplicationUser(Guid id);
     }
 }

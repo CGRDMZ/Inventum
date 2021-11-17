@@ -1,11 +1,14 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces;
+using Application.Services;
 using Domain;
+using MediatR;
 
 namespace Application.Commands
 {
-    public class OpenNewBoardCommandHandler : IAsyncCommandHandler<OpenNewBoardCommand, Guid>
+    public class OpenNewBoardCommandHandler : IRequestHandler<OpenNewBoardCommand, Guid>
     {
         private IBoardRepository _boardRepository;
         private IUserRepository _userRepository;
@@ -15,7 +18,7 @@ namespace Application.Commands
             _boardRepository = boardRepository;
             _userRepository = userRepository;
         }
-        public async Task<Guid> Handle(OpenNewBoardCommand command)
+        public async Task<Guid> Handle(OpenNewBoardCommand command, CancellationToken cancellationToken)
         {
 
             var owner = await _userRepository.FindByIdAsync(Guid.Parse(command.UserId));

@@ -17,6 +17,8 @@ using Application.Interfaces;
 using Application;
 using Domain;
 using Application.Commands;
+using MediatR.Registration;
+using MediatR;
 
 namespace WebApi
 {
@@ -40,7 +42,7 @@ namespace WebApi
 
             services.AddDbServices(Configuration.GetConnectionString("Postgres"));
 
-            services.AddTransient<IAsyncCommandHandler<OpenNewBoardCommand, Guid>, OpenNewBoardCommandHandler>();
+            services.AddMediatR(typeof(Startup));
 
             services.AddTransient<IBoardRepository, BoardRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
