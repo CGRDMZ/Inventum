@@ -16,10 +16,11 @@ namespace WebApi.Controllers
         public BoardController(IMediator mediator) {
             _mediator = mediator;
         }
-        
+
         [HttpPost]
-        public async Task<Guid> CreateBoard() {
-            return await _mediator.Send(new OpenNewBoardCommand("", "", ""));
+        public IActionResult CreateBoard()
+        {
+            return Ok();
         }
     }
 }

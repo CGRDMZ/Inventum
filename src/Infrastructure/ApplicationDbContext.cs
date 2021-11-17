@@ -19,6 +19,8 @@ namespace Infrastructure
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Board>().OwnsOne(b => b.BgColor);
+            modelBuilder.Entity<Card>().OwnsOne(c => c.Color);
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -19,6 +19,8 @@ using Domain;
 using Application.Commands;
 using MediatR.Registration;
 using MediatR;
+using System.Reflection;
+using Application.Services;
 
 namespace WebApi
 {
@@ -42,10 +44,13 @@ namespace WebApi
 
             services.AddDbServices(Configuration.GetConnectionString("Postgres"));
 
-            services.AddMediatR(typeof(Startup));
 
             services.AddTransient<IBoardRepository, BoardRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IApplicationUserRepository, InMemoryApplicationUserRepository>();
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddMediatR(typeof(OpenNewBoardCommandHandler));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
