@@ -2,6 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Commands;
+using Application.Interfaces;
+using Application.Services;
+using Domain;
+using Infrastructure;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,6 +30,17 @@ namespace MvcApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddMediatR(typeof(OpenNewBoardCommandHandler));
+
+            
+            services.AddDbServices(Configuration.GetConnectionString("Postgres"));
+
+
+            services.AddTransient<IBoardRepository, BoardRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddSingleton<IApplicationUserRepository, InMemoryApplicationUserRepository>();
+
+            services.AddTransient<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

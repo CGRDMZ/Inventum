@@ -18,7 +18,7 @@ namespace Application.Services
 
         public async Task<Guid> CreateNewUser(CreateNewUserCommand command)
         {
-            if(_applicationUserRepository.FindApplicationUserByUsername(command.Username) is not null) {
+            if(_applicationUserRepository.FindApplicationUserByUsername(command.Username) != null) {
                 throw new Exception("User with this name exists already.");
             }
             ApplicationUser appUser = ApplicationUser.New(command.Username, command.Email, command.Password);

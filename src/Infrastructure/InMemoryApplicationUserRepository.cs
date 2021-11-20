@@ -11,6 +11,7 @@ namespace Infrastructure
         public InMemoryApplicationUserRepository() {
             users = new Dictionary<string, ApplicationUser>();
         }
+        
         public ApplicationUser CreateNewApplicationUser(ApplicationUser user)
         {
             users[user.Username] = user;
