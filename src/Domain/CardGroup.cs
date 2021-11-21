@@ -20,6 +20,18 @@ namespace Domain
             cards = new List<Card>();
         }
 
+        public void AddNewCard(Card newCard)
+        {
+            foreach (var card in cards)
+            {
+                if (card.CardId == newCard.CardId) throw new Exception("This car already exists in the card group.");
+            }
+
+
+            cards.Add(newCard);
+
+        }
+
 
         public static CardGroup CreateNewGroup(string name)
         {

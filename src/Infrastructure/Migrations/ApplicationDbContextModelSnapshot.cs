@@ -50,6 +50,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
+                    b.Property<int>("Position")
+                        .HasColumnType("integer");
+
                     b.HasKey("CardId");
 
                     b.HasIndex("BelongsToCardGroupId");

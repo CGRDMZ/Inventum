@@ -30,6 +30,11 @@ namespace Application.Commands
 
             var board = Board.CreateEmptyBoard(owner);
 
+            if (command.Name != null)
+            {
+                board.ChangeNameTo(command.Name);
+            }
+
             return (await _boardRepository.AddAsync(board)).BoardId;
         }
 
