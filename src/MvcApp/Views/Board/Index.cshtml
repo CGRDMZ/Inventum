@@ -1,1 +1,27 @@
-Hello
+@model BoardViewModel
+
+<form asp-controller="Board" asp-action="AddNewBoard" method="post">
+    <div asp-validation-summary="All"></div>
+    <input asp-for="CreateBoardModel.BoardName">
+    <input asp-for="CreateBoardModel.BgColor" class="" type="color">
+    <input type="submit" value="new board">
+</form>
+<div class="container-fluid">
+    <div class="row flex-nowrap overflow-auto">
+        @foreach (var board in Model.Boards)
+        {
+            <div class="card" style="width: 18rem;background-color: @board.BgColor;">
+                <a asp-action="BoardDetail" asp-route-id="@board.BoardId">
+                        <div class="card-body">
+                            <h5 class="card-title">@board.BoardName</h5>
+                            
+                        </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

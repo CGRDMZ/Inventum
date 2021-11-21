@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Infrastructure
 {
@@ -32,7 +34,7 @@ namespace Infrastructure
 
         public async Task<User> FindByIdAsync(Guid id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Users.Include(u => u.Boards).FirstAsync(u => u.UserId == id);
         }
 
         public async Task UpdateAsync(User entity)

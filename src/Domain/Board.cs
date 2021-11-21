@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Domain
 {
@@ -12,7 +11,7 @@ namespace Domain
         public User Owner { get; private set; }
 
         private List<CardGroup> cardGroups = new List<CardGroup>();
-        public ReadOnlyCollection<CardGroup> CardGroups => cardGroups.AsReadOnly();
+        public IReadOnlyCollection<CardGroup> CardGroups => cardGroups.AsReadOnly();
 
         private Board() { }
 

@@ -9,6 +9,7 @@ namespace Application.Commands
 
         public string UserId { get; init; }
         public string Name { get; init; }
+        public string BgColor { get; init; }
 
 
     }
