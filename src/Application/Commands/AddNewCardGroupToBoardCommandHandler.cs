@@ -6,12 +6,12 @@ using MediatR;
 
 namespace Application.Commands
 {
-    public class AddNewCardGroupToBoardHandler : IRequestHandler<AddNewCardGroupToBoardCommand>
+    public class AddNewCardGroupToBoardCommandHandler : IRequestHandler<AddNewCardGroupToBoardCommand>
     {
         private readonly IBoardRepository _boardRepository;
         private readonly IUserRepository _userRepository;
 
-        public AddNewCardGroupToBoardHandler(IBoardRepository boardRepository, IUserRepository userRepository)
+        public AddNewCardGroupToBoardCommandHandler(IBoardRepository boardRepository, IUserRepository userRepository)
         {
             _boardRepository = boardRepository;
             _userRepository = userRepository;
