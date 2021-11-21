@@ -7,16 +7,21 @@ namespace Domain
         public Guid CardId { get; private set; }
         public string Content { get; private set; }
         public Color Color { get; private set; }
+        public int Position { get; private set; }
         public CardGroup BelongsTo { get; private set; }
 
         private Card() { }
 
-        public Card(string content, Color color, CardGroup belongsTo)
+        public Card(string content, Color color, CardGroup belongsTo, int position)
         {
+
+            if (belongsTo == null) throw new Exception("The card should be assigned to a group.");
+
             CardId = Guid.NewGuid();
             Content = content;
             Color = color;
             BelongsTo = belongsTo;
+            Position = position;
         }
 
         public void ChangeColorTo(Color color)
@@ -29,9 +34,9 @@ namespace Domain
             Color = color;
         }
 
-        public static Card CreateNew(CardGroup group)
+        public static Card CreateNew(CardGroup group, int position)
         {
-            return new Card("This is where you write the content of this card.", Color.Constants.White, group);
+            return new Card("This is where you write the content of this card.", Color.Constants.White, group, position);
         }
     }
 }

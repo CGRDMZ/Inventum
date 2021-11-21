@@ -16,6 +16,7 @@ namespace Application.Commands
 
         public async Task<Guid> Handle(CreateNewUserCommand command, CancellationToken cancellationToken)
         {
+            if (command == null) throw new ArgumentNullException(nameof(command));
             return await _userService.CreateNewUser(command);
 
         }
