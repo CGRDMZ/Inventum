@@ -9,7 +9,9 @@ namespace Domain
 
         public string Username { get; set; }
 
-        public ICollection<Board> Boards;
+        private List<Board> boards = new List<Board>();
+
+        public IReadOnlyCollection<Board> Boards => boards.AsReadOnly();
 
         public User() {}
 
@@ -20,14 +22,13 @@ namespace Domain
 
 
             Username = username;
-            Boards = new List<Board>();
         }
 
 
         public void OpenNewBoard() {
             Board board = Board.CreateEmptyBoard(this);
 
-            Boards.Add(board);
+            boards.Add(board);
         }
 
         public static User New(Guid id, string username) {

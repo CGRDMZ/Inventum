@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Domain
 {
     public class Color
@@ -28,6 +30,20 @@ namespace Domain
                 hash = hash * 23 + Blue.GetHashCode();
                 return hash;
             }
+        }
+
+        public static Color FromHexCode(string hex)
+        {
+            if (hex.StartsWith("#"))
+            {
+                hex = hex.Substring(1);
+            }
+            return new Color()
+            {
+                Red = int.Parse(hex.Substring(0, 2), NumberStyles.HexNumber),
+                Green = int.Parse(hex.Substring(2, 2), NumberStyles.HexNumber),
+                Blue = int.Parse(hex.Substring(4, 2), NumberStyles.HexNumber),
+            };
         }
 
         public static class Constants
