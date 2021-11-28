@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MvcApp.Models;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MvcApp.Controllers
 {
+    [Authorize]
     public class BoardController: Controller {
         private readonly ILogger<BoardController> _logger;
         private readonly IMediator _mediator;
@@ -24,8 +26,7 @@ namespace MvcApp.Controllers
         public async Task<IActionResult> Index() {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            userId = "ed758b45-2498-48c8-a2ca-664993d1a66a";
-            _logger.LogInformation(userId);
+            _logger.LogInformation("The user Id is " + userId);
 
             var result = await _mediator.Send(new GetBoardsOfUserByIdQuery() {
                 UserId = userId,
@@ -55,8 +56,6 @@ namespace MvcApp.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            userId = "ed758b45-2498-48c8-a2ca-664993d1a66a";
-            _logger.LogInformation("board color: " + model.CreateBoardModel.BgColor);
             _logger.LogInformation(ModelState.IsValid.ToString());
 
             var result = await _mediator.Send(new OpenNewBoardCommand() {
@@ -65,7 +64,7 @@ namespace MvcApp.Controllers
                 BgColor = model.CreateBoardModel.BgColor
             });
 
-            return Redirect("~/");
+            return Redirect("~/Board");
 
 
         }

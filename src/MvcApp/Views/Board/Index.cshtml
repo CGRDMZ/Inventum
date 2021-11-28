@@ -1,22 +1,35 @@
 @model BoardViewModel
 
-<form asp-controller="Board" asp-action="AddNewBoard" method="post">
-    <div asp-validation-summary="All"></div>
-    <input asp-for="CreateBoardModel.BoardName">
-    <input asp-for="CreateBoardModel.BgColor" class="" type="color">
-    <input type="submit" value="new board">
-</form>
+<hr>
 <div class="container-fluid">
-    <div class="row flex-nowrap overflow-auto">
+    <div class="row justify-content-center align-items-center">
+        <div class="m-2" style="width: 18rem;">
+            <div class="card border border-dark p-1 shadow-sm">
+                <form asp-controller="Board" asp-action="AddNewBoard" method="post" class="pb-2">
+                    <div asp-validation-summary="All"></div>
+                    <div class="row flex-nowrap">
+                        <div class="col-8">
+                            <input asp-for="CreateBoardModel.BoardName" placeholder="Add new board...">
+                        </div>
+                        <div class="col-4 ms-2">
+                            <input asp-for="CreateBoardModel.BgColor" class="" type="color" value="#ffffff">
+                        </div>
+                    </div>
+                    <input type="submit" value="new board" class="visually-hidden">
+                </form>
+            </div>
+        </div>
         @foreach (var board in Model.Boards)
         {
-            <div class="card" style="width: 18rem;background-color: @board.BgColor;">
-                <a asp-action="BoardDetail" asp-route-id="@board.BoardId">
+            <div class="m-2" style="width: 18rem;">
+                <div class="card shadow-sm" style="background-color: @board.BgColor;">
+                    <a asp-action="BoardDetail" asp-route-id="@board.BoardId" class="text-decoration-none">
                         <div class="card-body">
-                            <h5 class="card-title">@board.BoardName</h5>
-                            
+                            <h5 class="card-title text-dark">@board.BoardName</h5>
+
                         </div>
-                </a>
+                    </a>
+                </div>
             </div>
         }
     </div>

@@ -1,16 +1,17 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Commands;
 using Application.Interfaces;
 using Application.Services;
 using Domain;
 using Infrastructure;
+using Infrastructure.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,15 +33,29 @@ namespace MvcApp
             services.AddControllersWithViews();
             services.AddMediatR(typeof(OpenNewBoardCommandHandler));
 
-            
-            services.AddDbServices(Configuration.GetConnectionString("Postgres"));
 
+            services.AddDbServices<ApplicationDbContext>(Configuration.GetConnectionString("Postgres"));
+            services.AddDbServices<MyIdentityDbContext>(Configuration.GetConnectionString("Postgres"));
+
+            services.AddIdentity<AppUser, IdentityRole<Guid>>().AddEntityFrameworkStores<MyIdentityDbContext>().AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.SlidingExpiration = true;
+            });
 
             services.AddTransient<IBoardRepository, BoardRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddSingleton<IApplicationUserRepository, InMemoryApplicationUserRepository>();
+            services.AddTransient<IApplicationUserRepository, EfIdentityUserRepository>();
 
             services.AddTransient<IUserService, UserService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +75,8 @@ namespace MvcApp
             app.UseStaticFiles();
 
             app.UseRouting();
+
+
 
             app.UseAuthentication();
             app.UseAuthorization();
