@@ -1,7 +1,10 @@
+using System;
+using System.Threading.Tasks;
+
 namespace Application.Interfaces
 {
     public interface IApplicationUserRepository {
-        ApplicationUser FindApplicationUserByUsername(string username);
-        ApplicationUser CreateNewApplicationUser(ApplicationUser user);
+        Task<bool> FindApplicationUserExistsByUsername(string username);
+        Task<ResultWrapper<Guid>> CreateNewApplicationUser(ApplicationUser user);
     }
 }

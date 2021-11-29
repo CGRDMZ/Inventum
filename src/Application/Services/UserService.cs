@@ -16,19 +16,21 @@ namespace Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<Guid> CreateNewUser(CreateNewUserCommand command)
+        public async Task<ResultWrapper<Guid>> CreateNewUser(CreateNewUserCommand command)
         {
-            if(_applicationUserRepository.FindApplicationUserByUsername(command.Username) != null) {
+            if(await _applicationUserRepository.FindApplicationUserExistsByUsername(command.Username)) {
                 throw new Exception("User with this name exists already.");
             }
             ApplicationUser appUser = ApplicationUser.New(command.Username, command.Email, command.Password);
-            _applicationUserRepository.CreateNewApplicationUser(appUser);
-            
+            var result = await _applicationUserRepository.CreateNewApplicationUser(appUser);
+            if (!result.Success) {
+                return result;
+            }
 
-            User domainUser = User.New(appUser.Id, command.Username);
+            User domainUser = User.New(result.Data, command.Username);
             await _userRepository.AddAsync(domainUser);
 
-            return domainUser.UserId;
+            return result;
         }
 
         public Task<ApplicationUser> GetApplicationUser(Guid id)

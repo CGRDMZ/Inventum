@@ -37,16 +37,24 @@ namespace Domain
 
         public void ChangeNameTo(string newName)
         {
-            if (newName.Trim() == "" || newName.Trim().Length < 5)
-                throw new ArgumentException("Board name can not be smaller than 5 characters.");
+            if (newName.Trim() == "" || newName.Trim().Length < 3)
+                throw new ArgumentException("Board name can not be smaller than 3 characters.");
 
             Name = newName;
         }
 
-        public void AddNewCardGroup(string name = "New Card Group")
+        public void AddNewCardGroup(string name)
         {
+            if (name == null) {
+                 name = "New Card Group";
+            }
+
             CardGroup newGroup = CardGroup.CreateNewGroup(name);
             cardGroups.Add(newGroup);
+        }
+
+        public bool IsAccessiableBy(Guid userId) {
+            return Owner.UserId == userId;
         }
 
         public static Board CreateEmptyBoard(User owner)

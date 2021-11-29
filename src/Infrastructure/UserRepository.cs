@@ -34,7 +34,7 @@ namespace Infrastructure
 
         public async Task<User> FindByIdAsync(Guid id)
         {
-            return await _context.Users.Include(u => u.Boards).FirstAsync(u => u.UserId == id);
+            return await _context.Users.Include(u => u.Boards).FirstOrDefaultAsync(u => u.UserId == id);
         }
 
         public async Task UpdateAsync(User entity)

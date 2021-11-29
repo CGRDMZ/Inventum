@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MvcApp.Models
 {
-    public class BoardModel
+    public class BoardMetadataModel
     {
         public string BoardId { get; init; }
 

@@ -20,7 +20,10 @@ namespace Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<CardGroup>().Property(cg => cg.CardGroupId).IsRequired().ValueGeneratedNever();
 
+
+            modelBuilder.Entity<Card>().Property(c => c.CardId).IsRequired().ValueGeneratedNever();
 
             modelBuilder.Entity<Board>().OwnsOne(b => b.BgColor);
 

@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Application.Queries
 {
-    public class GetBoardsOfUserByIdQueryHandler : IRequestHandler<GetBoardsOfUserByIdQuery, List<BoardDto>>
+    public class GetBoardsOfUserByIdQueryHandler : IRequestHandler<GetBoardsOfUserByIdQuery, List<BoardDetailsDto>>
     {
         private readonly IUserRepository _userRepository;
 
@@ -17,11 +17,11 @@ namespace Application.Queries
             _userRepository = userRepository;
         }
 
-        public async Task<List<BoardDto>> Handle(GetBoardsOfUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<List<BoardDetailsDto>> Handle(GetBoardsOfUserByIdQuery request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.FindByIdAsync(Guid.Parse(request.UserId));
 
-            if (user is null) {
+            if (user == null) {
                 throw new Exception("User not found.");
             }
 
@@ -30,11 +30,11 @@ namespace Application.Queries
             Console.WriteLine("wtf: " + boards.Count);
 
 
-            var boardDtoList = new List<BoardDto>();
+            var boardDtoList = new List<BoardDetailsDto>();
 
             foreach (var board in boards)
             {
-                boardDtoList.Add(new BoardDto() {
+                boardDtoList.Add(new BoardDetailsDto() {
                     BoardId = board.BoardId.ToString(),
                     Name = board.Name,
                     BgColor = board.BgColor.ToString()

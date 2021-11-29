@@ -4,8 +4,8 @@ namespace MvcApp.Models
 {
     public class BoardViewModel
     {
-        public List<BoardModel> Boards { get; init; }
-        public BoardModel CreateBoardModel {get; init; }
+        public List<BoardMetadataModel> Boards { get; init; }
+        public BoardMetadataModel CreateBoardModel {get; init; }
 
     }
 }

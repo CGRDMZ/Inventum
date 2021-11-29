@@ -34,9 +34,16 @@ namespace Domain
             Color = color;
         }
 
-        public static Card CreateNew(CardGroup group, int position)
+        public void ChangePosition(int pos) {
+            if (pos < 0 || pos >= int.MaxValue) {
+                throw new Exception("New position cannot be smaller than 0 and bigger than max value.");
+            }
+            Position = pos;
+        }
+
+        public static Card CreateNew(string content, Color color, CardGroup group, int position = 0)
         {
-            return new Card("This is where you write the content of this card.", Color.Constants.White, group, position);
+            return new Card(content, color, group, position);
         }
     }
 }
