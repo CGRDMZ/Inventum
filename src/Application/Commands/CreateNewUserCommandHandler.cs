@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.Commands
 {
-    public class CreateNewUserCommandHandler : IRequestHandler<CreateNewUserCommand, Guid>
+    public class CreateNewUserCommandHandler : IRequestHandler<CreateNewUserCommand, ResultWrapper<Guid>>
     {
         IUserService _userService;
         public CreateNewUserCommandHandler(IUserService userService)
@@ -14,7 +14,7 @@ namespace Application.Commands
             _userService = userService;
         }
 
-        public async Task<Guid> Handle(CreateNewUserCommand command, CancellationToken cancellationToken)
+        public async Task<ResultWrapper<Guid>> Handle(CreateNewUserCommand command, CancellationToken cancellationToken)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             return await _userService.CreateNewUser(command);

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 
-<body style="height: 100vh">
+<body style="height: 100vh;background-color: @ViewData["BgColor"]">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -35,7 +35,7 @@
     </header>
     @RenderBody()
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted bg-light">
         <div class="container">
             &copy; 2021 - Inventum - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Application.Commands
 {
-    public class CreateNewUserCommand : ICommand, IRequest<Guid>
+    public class CreateNewUserCommand : ICommand, IRequest<ResultWrapper<Guid>>
     {
         public string Username { get; init; }
         public string Email { get; init; }

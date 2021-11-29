@@ -9,10 +9,10 @@
                     <div asp-validation-summary="All"></div>
                     <div class="row flex-nowrap">
                         <div class="col-8">
-                            <input asp-for="CreateBoardModel.BoardName" placeholder="Add new board...">
+                            <input asp-for="CreateBoardModel.BoardName" class="form-control"  placeholder="Add new board...">
                         </div>
-                        <div class="col-4 ms-2">
-                            <input asp-for="CreateBoardModel.BgColor" class="" type="color" value="#ffffff">
+                        <div class="col-4">
+                            <input asp-for="CreateBoardModel.BgColor" class="form-control form-control-color" type="color" value="#ffffff">
                         </div>
                     </div>
                     <input type="submit" value="new board" class="visually-hidden">
@@ -23,7 +23,7 @@
         {
             <div class="m-2" style="width: 18rem;">
                 <div class="card shadow-sm" style="background-color: @board.BgColor;">
-                    <a asp-action="BoardDetail" asp-route-id="@board.BoardId" class="text-decoration-none">
+                    <a asp-action="Detail" asp-route-id="@board.BoardId" class="text-decoration-none">
                         <div class="card-body">
                             <h5 class="card-title text-dark">@board.BoardName</h5>
 

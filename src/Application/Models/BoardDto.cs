@@ -1,9 +1,10 @@
+using System.Collections.Generic;
+
 namespace Application.Models
 {
     public class BoardDto
     {
-        public string BoardId { get; init; }
-        public string Name { get; init; }
-        public string BgColor { get; init; }
+        public BoardDetailsDto BoardInfo { get; init; }
+        public List<CardGroupDto> CardGroups { get; init; }
     }
 }

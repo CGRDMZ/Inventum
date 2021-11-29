@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Domain
@@ -27,9 +28,17 @@ namespace Domain
                 if (card.CardId == newCard.CardId) throw new Exception("This car already exists in the card group.");
             }
 
+            var nextPosition = calculateNextPosition();
+            newCard.ChangePosition(nextPosition);
+
 
             cards.Add(newCard);
 
+        }
+
+        private int calculateNextPosition() {
+            var lastCard = Cards.OrderBy(c => c.Position).LastOrDefault();
+            return lastCard == null ? 0 : lastCard.Position + 1;
         }
 
 

@@ -20,7 +20,7 @@ namespace Domain
                 throw new ArgumentException("Username cannot be smaller than 5 letters.");
             }
 
-
+            UserId = userId;
             Username = username;
         }
 
