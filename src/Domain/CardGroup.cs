@@ -21,6 +21,7 @@ namespace Domain
             cards = new List<Card>();
         }
 
+
         public void AddNewCard(Card newCard)
         {
             foreach (var card in cards)
@@ -36,10 +37,12 @@ namespace Domain
 
         }
 
-        private int calculateNextPosition() {
+        private int calculateNextPosition()
+        {
             var lastCard = Cards.OrderBy(c => c.Position).LastOrDefault();
             return lastCard == null ? 0 : lastCard.Position + 1;
         }
+
 
 
         public static CardGroup CreateNewGroup(string name)

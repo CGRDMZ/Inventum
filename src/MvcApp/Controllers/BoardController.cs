@@ -72,7 +72,8 @@ namespace MvcApp.Controllers
             var result = await _mediator.Send(query);
 
 
-            var vm = new BoardDetailViewModel() {
+            var vm = new BoardDetailViewModel()
+            {
                 Board = result
             };
 
@@ -83,7 +84,8 @@ namespace MvcApp.Controllers
         public async Task<IActionResult> AddNewCardGroup(string id, BoardDetailViewModel model)
         {
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return Json(model);
             }
 
@@ -92,13 +94,15 @@ namespace MvcApp.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var boardId = id;
 
-            var result = await _mediator.Send(new AddNewCardGroupToBoardCommand() {
+            var result = await _mediator.Send(new AddNewCardGroupToBoardCommand()
+            {
                 OwnerUserId = userId,
                 BoardId = boardId,
                 CardGroupName = model.CreateCardGroupModel.CardGroupName
             });
 
-            if (result.Success) {
+            if (result.Success)
+            {
                 _logger.LogInformation("New Card Group Added to Board with Id: " + id);
                 return LocalRedirect($"~/Board/Detail/{boardId}");
             }
@@ -116,7 +120,8 @@ namespace MvcApp.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var result = await _mediator.Send(new AddNewCardToCardGroupCommand() {
+            var result = await _mediator.Send(new AddNewCardToCardGroupCommand()
+            {
                 BoardId = boardId,
                 CardGroupId = cardGroupId,
                 Content = model.CreateNewCardModel.Content,
@@ -148,6 +153,25 @@ namespace MvcApp.Controllers
             });
 
             return Redirect("~/Board");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SwapCards(string boardId, string cardGroupId, string first, string second)
+        {
+            _logger.LogInformation($"first id: {first}, second id: {second}, board id: ${boardId}");
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var res = await _mediator.Send(new SwapCardsCommand()
+            {
+                UserId = userId,
+                BoardId = boardId,
+                CardGroupId = cardGroupId,
+                FirstCardId = first,
+                SecondCardId = second
+            });
+
+            return Redirect($"~/Board/Detail/{boardId}");
         }
     }
 }

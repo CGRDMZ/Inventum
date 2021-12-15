@@ -34,6 +34,12 @@ namespace Domain
             Color = color;
         }
 
+        internal void SwapPositionWith(Card other) {
+            var temp = this.Position;
+            this.ChangePosition(other.Position);
+            other.ChangePosition(temp);
+        }
+
         public void ChangePosition(int pos) {
             if (pos < 0 || pos >= int.MaxValue) {
                 throw new Exception("New position cannot be smaller than 0 and bigger than max value.");

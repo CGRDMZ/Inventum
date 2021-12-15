@@ -56,6 +56,8 @@ namespace MvcApp
 
             services.AddTransient<IUserService, UserService>();
 
+            services.AddTransient<ICardLocationService, CardLocationService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,6 +85,9 @@ namespace MvcApp
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "swapcard",
+                    pattern: "{controller=Board}/{boardId}/CardGroup/{cardGroupId}/{action=SwapCards}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
