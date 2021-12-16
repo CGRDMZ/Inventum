@@ -89,6 +89,12 @@ namespace MvcApp
                     name: "swapcard",
                     pattern: "{controller=Board}/{boardId}/CardGroup/{cardGroupId}/{action=SwapCards}");
                 endpoints.MapControllerRoute(
+                    name: "reposition",
+                    pattern: "{controller=Board}/{boardId}/CardGroup/{cardGroupId}/{action=RepositionCards}");
+                endpoints.MapControllerRoute(
+                    name: "reposition",
+                    pattern: "{controller=Board}/{boardId}/CardGroup/{cardGroupId}/{action=TransferCard}");
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });

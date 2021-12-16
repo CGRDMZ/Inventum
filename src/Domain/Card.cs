@@ -24,6 +24,13 @@ namespace Domain
             Position = position;
         }
 
+        public void TransferTo(CardGroup cg) {
+            if (cg == null) {
+                throw new ArgumentNullException(nameof(cg));
+            }
+            BelongsTo = cg;
+        }
+
         public void ChangeColorTo(Color color)
         {
             if (color == null)
