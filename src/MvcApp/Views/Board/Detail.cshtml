@@ -32,10 +32,10 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">@cardGroup.Name</h5>
-                        <ul class="list-group list-group-flush">
+                        <ul class="list-group" style="min-height: 50px;" data-card-group-id="@cardGroup.CardGroupId">
                             @foreach (var card in cardGroup.Cards)
                             {
-                                <li class="list-group-item draggable drop-zone" data-boardId="@Model.Board.BoardInfo.BoardId" data-card-group-id="@cardGroup.CardGroupId" data-cardid="@card.CardId" style="background-color: @card.CardColor; touch-action: none;">@card.Content - @card.Position</li>
+                                <li class="list-group-item rounded m-1 shadow-sm" data-boardId="@Model.Board.BoardInfo.BoardId" data-card-group-id="@cardGroup.CardGroupId" data-cardid="@card.CardId" style="background-color: @card.CardColor;border: none;">@card.Content - @card.Position</li>
                             }
                         </ul>
                         <form asp-controller="Board" asp-action="AddCard" method="post" asp-route-boardId="@Model.Board.BoardInfo.BoardId" asp-route-cardGroupId="@cardGroup.CardGroupId">

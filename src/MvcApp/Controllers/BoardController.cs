@@ -173,5 +173,41 @@ namespace MvcApp.Controllers
 
             return Redirect($"~/Board/Detail/{boardId}");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RepositionCards(string boardId, string cardGroupId, string cardIds)
+        {
+            _logger.LogInformation($"card ids: {cardIds} board id: ${boardId}");
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var res = await _mediator.Send(new RepositionTheCardsCommand()
+            {
+                UserId = userId,
+                BoardId = boardId,
+                CardGroupId = cardGroupId,
+                CardIds = cardIds,
+            });
+
+            return Json(res);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TransferCard(string boardId, string cardGroupId, string cardId, string targetCardGroupId)
+        {
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var res = await _mediator.Send(new TransferCardToAnotherGroupCommand()
+            {
+                UserId = userId,
+                BoardId = boardId,
+                CardGroupId = cardGroupId,
+                CardId = cardId,
+                TargetCardGroupId = targetCardGroupId
+            });
+
+            return Json(res);
+        }
     }
 }
