@@ -55,6 +55,7 @@ namespace MvcApp
             services.AddTransient<IApplicationUserRepository, EfIdentityUserRepository>();
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICardService, CardService>();
 
             services.AddTransient<ICardLocationService, CardLocationService>();
 
@@ -92,8 +93,11 @@ namespace MvcApp
                     name: "reposition",
                     pattern: "{controller=Board}/{boardId}/CardGroup/{cardGroupId}/{action=RepositionCards}");
                 endpoints.MapControllerRoute(
-                    name: "reposition",
+                    name: "transfer",
                     pattern: "{controller=Board}/{boardId}/CardGroup/{cardGroupId}/{action=TransferCard}");
+                endpoints.MapControllerRoute(
+                    name: "remove",
+                    pattern: "{controller=Board}/{boardId}/CardGroup/{cardGroupId}/{action=RemoveCard}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

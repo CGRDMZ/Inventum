@@ -19,7 +19,8 @@
                     <form asp-controller="Board" asp-action="AddNewCardGroup"
                         asp-route-id="@Model.Board.BoardInfo.BoardId" method="post">
                         <div asp-validation-summary="All"></div>
-                        <input asp-for="CreateCardGroupModel.CardGroupName" placeholder="Add new card group..." class="form-control">
+                        <input asp-for="CreateCardGroupModel.CardGroupName" placeholder="Add new card group..."
+                            class="form-control">
                         <button type="submit" class="visually-hidden">Add</button>
                     </form>
 
@@ -31,20 +32,32 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">@cardGroup.Name</h5>
+                        <h5 class="card-title pb-1" style="border-bottom: 3px solid @Model.Board.BoardInfo.BgColor;">@cardGroup.Name</h5>
                         <ul class="list-group" style="min-height: 50px;" data-card-group-id="@cardGroup.CardGroupId">
                             @foreach (var card in cardGroup.Cards)
                             {
-                                <li class="list-group-item rounded m-1 shadow-sm" data-boardId="@Model.Board.BoardInfo.BoardId" data-card-group-id="@cardGroup.CardGroupId" data-cardid="@card.CardId" style="background-color: @card.CardColor;border: none;">@card.Content - @card.Position</li>
+                                <li class="list-group-item rounded m-1 shadow-sm d-flex justify-content-between" data-boardId="@Model.Board.BoardInfo.BoardId"
+                            data-card-group-id="@cardGroup.CardGroupId" data-cardid="@card.CardId"
+                            style="background-color: @card.CardColor;border: none;">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        @card.Content - @card.Position
+                                    </div>
+                                    <div>
+                                        <form action="/Board/@Model.Board.BoardInfo.BoardId/CardGroup/@cardGroup.CardGroupId/RemoveCard?cardId=@card.CardId" method="post"><button class="btn btn-danger" type="submit">X</button></form>
+                                    </div>
+                                </li>
                             }
                         </ul>
-                        <form asp-controller="Board" asp-action="AddCard" method="post" asp-route-boardId="@Model.Board.BoardInfo.BoardId" asp-route-cardGroupId="@cardGroup.CardGroupId">
+                        <form asp-controller="Board" asp-action="AddCard" method="post"
+                        asp-route-boardId="@Model.Board.BoardInfo.BoardId"
+                        asp-route-cardGroupId="@cardGroup.CardGroupId">
                             <div class="row m-2 p-1 border-top">
                                 <div class="col-8">
                                     <input asp-for="CreateNewCardModel.Content" class="form-control">
                                 </div>
                                 <div class="col-4">
-                                    <input asp-for="CreateNewCardModel.BgColor" type="color" value="#ffffff" class="form-control form-control-color">
+                                    <input asp-for="CreateNewCardModel.BgColor" type="color" value="#ffffff"
+                                    class="form-control form-control-color">
                                 </div>
                                 <button type="submit" class="visually-hidden"></button>
                             </div>
@@ -59,4 +72,3 @@
 @section Scripts {
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-

@@ -31,6 +31,10 @@ namespace Domain
             BelongsTo = cg;
         }
 
+        public void RemoveFromGroup() {
+            BelongsTo = null;
+        }
+
         public void ChangeColorTo(Color color)
         {
             if (color == null)

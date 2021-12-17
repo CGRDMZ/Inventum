@@ -156,6 +156,24 @@ namespace MvcApp.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> RemoveCard(string boardId, string cardGroupId, string cardId)
+        {
+            _logger.LogInformation($"card id: {cardId} is getting removed...");
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var res = await _mediator.Send(new RemoveCardCommand()
+            {
+                UserId = userId,
+                BoardId = boardId,
+                CardGroupId = cardGroupId,
+                CardId = cardId,
+            });
+
+            return Redirect($"~/Board/Detail/{boardId}");
+        }
+
+        [HttpPost]
         public async Task<IActionResult> SwapCards(string boardId, string cardGroupId, string first, string second)
         {
             _logger.LogInformation($"first id: {first}, second id: {second}, board id: ${boardId}");

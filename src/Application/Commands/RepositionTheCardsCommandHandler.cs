@@ -5,46 +5,42 @@ using System.Threading.Tasks;
 using Domain;
 using MediatR;
 using System.Collections.Generic;
+using Application.Interfaces;
 
 namespace Application.Commands
 {
     public class RepositionTheCardsCommandHandler : IRequestHandler<RepositionTheCardsCommand, ResultWrapper<Unit>>
     {
         private readonly IBoardRepository _boardRepository;
+        private readonly ICardService _cardService;
 
-        public RepositionTheCardsCommandHandler(IBoardRepository boardRepository)
+        public RepositionTheCardsCommandHandler(IBoardRepository boardRepository, ICardService cardService)
         {
             _boardRepository = boardRepository;
+            _cardService = cardService;
         }
 
         public async Task<ResultWrapper<Unit>> Handle(RepositionTheCardsCommand req, CancellationToken cancellationToken)
         {
             var result = new ResultWrapper<Unit>() { Errors = new List<string>(), Data = Unit.Value };
 
-            var reqCardIds = req.CardIds.Split(',').Select(id => Guid.Parse(id)).ToList();
-
-
+            var reqCardIds = req.CardIds.Split(',').Select(id => Guid.Parse(id)).ToHashSet().ToList();
 
             var board = await _boardRepository.FindByIdAsync(Guid.Parse(req.BoardId));
-
-            if (board == null)
-            {
-                result.Errors.Add($"There is no Board with the id: {req.BoardId}");
+            if (!board.IsAccessiableBy(Guid.Parse(req.UserId))) {
+                result.Errors.Add("This user cannot modify this board.");
                 return result;
             }
 
-            if (!board.IsAccessiableBy(Guid.Parse(req.UserId)))
-            {
-                result.Errors.Add($"User with id: {req.UserId} is not allowed to modify this board.");
+            IEnumerable<Card> cards;
+            try {
+                cards = _cardService.GetCards(board, Guid.Parse(req.UserId), Guid.Parse(req.CardGroupId), reqCardIds);
+            } catch (Exception e) {
+                result.Errors.Add(e.Message);
                 return result;
             }
 
-            var cardGroup = board.CardGroups.Single(cg => cg.CardGroupId == Guid.Parse(req.CardGroupId));
-
-            var cardIds = cardGroup.Cards.Select(c => c.CardId).ToHashSet();
-
-
-            var cards = cardGroup.Cards;
+            var cardIds = cards.Select(c => c.CardId).ToHashSet();
 
 
             if (!cardIds.SetEquals(reqCardIds.ToHashSet()))
@@ -53,6 +49,7 @@ namespace Application.Commands
                 return result;
             }
 
+            // TODO: refactor this to prevent domain logic leaking to application layer.
             int pos = 0;
             reqCardIds.ForEach(id =>
             {
