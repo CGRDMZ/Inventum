@@ -22,19 +22,11 @@ namespace Domain
             Message = message ?? "Something happened.";
             BelongsTo = belongsTo ?? throw new ArgumentNullException(nameof(Board));
             DoneBy = doneBy ?? throw new ArgumentNullException(nameof(User));
-
         }
 
         public static Activity New(User doneBy, string message, Board belongsTo)
         {
             return new Activity(doneBy, message, belongsTo);
         }
-
-
-
-
     }
-
-
-
 }
