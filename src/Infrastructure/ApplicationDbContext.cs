@@ -25,6 +25,8 @@ namespace Infrastructure
 
             modelBuilder.Entity<Card>().Property(c => c.CardId).IsRequired().ValueGeneratedNever();
 
+            modelBuilder.Entity<Activity>().Property(a => a.ActivityId).IsRequired().ValueGeneratedNever();
+
             modelBuilder.Entity<Board>().OwnsOne(b => b.BgColor);
 
 
