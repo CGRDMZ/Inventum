@@ -67,6 +67,10 @@
             </div>
         }
     </div>
+    <div class="row">@foreach (var activity in Model.Board.Activities)
+    {
+        <div>@activity.Message</div>
+    }</div>
 </div>
 
 @section Scripts {

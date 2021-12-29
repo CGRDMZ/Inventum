@@ -56,7 +56,7 @@ namespace Application.Commands
             // Adding te activity        
             var activity = Activity.New(board.Owner,
                      $"Card with the content \"{card.Content}\" was tranfered from group \"{cardGroup.Name}\" " +
-                    "to group \"{targetCardGroup.Name}\" by {board.Owner.Username}", board);
+                    $"to group \"{targetCardGroup.Name}\" by {board.Owner.Username}", board);
             board.AddActivity(activity);
 
             await _boardRepository.UpdateAsync(board);
