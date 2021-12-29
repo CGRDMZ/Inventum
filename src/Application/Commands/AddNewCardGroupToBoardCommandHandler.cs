@@ -39,6 +39,7 @@ namespace Application.Commands
 
             board.AddNewCardGroup(command.CardGroupName ?? null);
 
+            // Adding the activity
             var activity = Activity.New(board.Owner, $"New card group was added by {board.Owner.Username}", board);
             board.AddActivity(activity);
 

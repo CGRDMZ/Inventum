@@ -39,6 +39,10 @@ namespace Application.Commands
                 board.ChangeColorTo(Color.FromHexCode(command.BgColor));
             }
 
+            // Adding the activity
+            var activity = Activity.New(board.Owner, $"Board was created by {board.Owner.Username}", board);
+            board.AddActivity(activity);
+
             return (await _boardRepository.AddAsync(board)).BoardId;
         }
 
