@@ -45,6 +45,12 @@ namespace Application.Queries
                         CardColor = c.Color.ToString(),
                         Position = c.Position
                     }).OrderBy(c => c.Position).ToList()
+                }).ToList(),
+                Activities = board.Activities.Select(a => new ActivityDto()
+                {
+                    OccuredOn = a.OccuredOn.ToString(),
+                    DoneByUser = a.DoneBy.Username,
+                    Message = a.Message
                 }).ToList()
             };
         }

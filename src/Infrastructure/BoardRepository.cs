@@ -33,7 +33,7 @@ namespace Infrastructure
 
         public async Task<Board> FindByIdAsync(Guid id)
         {
-            return await _context.Boards.Include(b => b.Owner).Include(b => b.CardGroups).ThenInclude(cg => cg.Cards).FirstAsync(b => b.BoardId == id);
+            return await _context.Boards.Include(b => b.Owner).Include(b => b.Activities).Include(b => b.CardGroups).ThenInclude(cg => cg.Cards).FirstAsync(b => b.BoardId == id);
         }
 
         public async Task UpdateAsync(Board entity)

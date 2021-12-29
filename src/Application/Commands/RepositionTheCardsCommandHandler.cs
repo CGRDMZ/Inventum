@@ -55,7 +55,12 @@ namespace Application.Commands
             {
                 var card = cards.Single(c => c.CardId == id);
                 card.ChangePosition(pos++);
-            });
+            });            
+
+            // Adding te activity
+            var cardGroupName = board.CardGroups.Single( cg => cg.CardGroupId == Guid.Parse(req.CardGroupId)).Name;
+            var activity = Activity.New(board.Owner, $"Cards in the group named {cardGroupName} by {board.Owner.Username}", board);
+            board.AddActivity(activity);
 
             await _boardRepository.UpdateAsync(board);
 

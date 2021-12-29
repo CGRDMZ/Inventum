@@ -6,5 +6,6 @@ namespace Application.Models
     {
         public BoardDetailsDto BoardInfo { get; init; }
         public List<CardGroupDto> CardGroups { get; init; }
+        public List<ActivityDto> Activities { get; init; }
     }
 }

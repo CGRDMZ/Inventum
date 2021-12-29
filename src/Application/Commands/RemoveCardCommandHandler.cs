@@ -33,6 +33,10 @@ namespace Application.Commands
 
             var card = _cardService.GetCards(board, Guid.Parse(req.UserId), Guid.Parse(req.CardGroupId), new[] { Guid.Parse(req.CardId) }).Single();
 
+            // Adding the activity
+            var activity = Activity.New(board.Owner, $"Card with the content \"{card.Content}\" was deleted by {board.Owner.Username}", board);
+            board.AddActivity(activity);
+            
             card.RemoveFromGroup();
 
             await _boardRepository.UpdateAsync(board);
