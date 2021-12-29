@@ -40,6 +40,10 @@ namespace Application.Commands
 
             cardGroup.AddNewCard(newCard);
 
+            // Adding the activity
+            var activity = Activity.New(board.Owner, $"New car is added by {board.Owner.Username}", board);
+            board.AddActivity(activity);
+
             await _boardRepository.UpdateAsync(board);
 
 

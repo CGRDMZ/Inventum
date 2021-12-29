@@ -39,6 +39,9 @@ namespace Application.Commands
 
             board.AddNewCardGroup(command.CardGroupName ?? null);
 
+            var activity = Activity.New(board.Owner, $"New card group was added by {board.Owner.Username}", board);
+            board.AddActivity(activity);
+
             await _boardRepository.UpdateAsync(board);
 
             return result;
