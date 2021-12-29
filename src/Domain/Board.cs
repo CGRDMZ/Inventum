@@ -13,6 +13,10 @@ namespace Domain
         private List<CardGroup> cardGroups = new List<CardGroup>();
         public IReadOnlyCollection<CardGroup> CardGroups => cardGroups.AsReadOnly();
 
+
+        private List<Activity> activities = new List<Activity>();
+        public IReadOnlyCollection<Activity> Activities => activities.AsReadOnly();
+
         private Board() { }
 
         public Board(string name, Color bgColor, User owner)
@@ -23,6 +27,7 @@ namespace Domain
             Owner = owner;
 
             cardGroups = new List<CardGroup>();
+            activities = new List<Activity>();
         }
 
         public void AssignTo(User user)
@@ -43,17 +48,26 @@ namespace Domain
             Name = newName;
         }
 
+        public void AddActivity(Activity activity)
+        {
+            if (activity == null)
+                throw new ArgumentNullException(nameof(Activity));
+            activities.Add(activity);
+        }
+
         public void AddNewCardGroup(string name)
         {
-            if (name == null) {
-                 name = "New Card Group";
+            if (name == null)
+            {
+                name = "New Card Group";
             }
 
             CardGroup newGroup = CardGroup.CreateNewGroup(name);
             cardGroups.Add(newGroup);
         }
 
-        public bool IsAccessiableBy(Guid userId) {
+        public bool IsAccessiableBy(Guid userId)
+        {
             return Owner.UserId == userId;
         }
 
