@@ -12,6 +12,7 @@ namespace Domain
         public string Message { get; private set; }
         public Board BelongsTo { get; private set; }
 
+        private Activity(){ }
 
         public Activity(User doneBy, string message, Board belongsTo)
         {
