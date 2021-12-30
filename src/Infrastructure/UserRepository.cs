@@ -37,6 +37,12 @@ namespace Infrastructure
             return await _context.Users.Include(u => u.Boards).FirstOrDefaultAsync(u => u.UserId == id);
         }
 
+        public async Task<User> FindUserByUsername(string username)
+        {
+            return await _context.Users.Include(u => u.Invitations).Include(u => u.Boards).
+            FirstOrDefaultAsync(u => u.Username == username);
+        }
+
         public async Task UpdateAsync(User entity)
         {
             _context.Users.Update(entity);
@@ -44,5 +50,7 @@ namespace Infrastructure
             await _context.SaveChangesAsync();
 
         }
+
+        
     }
 }
