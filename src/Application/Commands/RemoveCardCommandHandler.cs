@@ -14,11 +14,11 @@ namespace Application.Commands
         private readonly IBoardRepository _boardRepository;
         private readonly ICardService _cardService;
 
-        public RemoveCardCommandHandler(IBoardRepository boardRepository, ICardService cardService)
+       public RemoveCardCommandHandler(IBoardRepository boardRepository, ICardService cardService)
         {
             _boardRepository = boardRepository;
             _cardService = cardService;
-        }
+        } 
 
         public async Task<ResultWrapper<Unit>> Handle(RemoveCardCommand req, CancellationToken cancellationToken)
         {
