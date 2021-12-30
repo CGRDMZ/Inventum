@@ -20,12 +20,12 @@ namespace Application.Commands
         }
         public async Task<ResultWrapper<Unit>> Handle(RemoveBoardCommand req, CancellationToken cancellationToken)
         {
-            var result = new ResultWrapper<Unit>() { Errors = new List<string>(), Data = Unit.Value };
+            var result = new ResultWrapper<Unit>() { Data = Unit.Value };
 
             var board = await _boardRepository.FindByIdAsync(Guid.Parse(req.BoardId));
             if (!board.IsAccessiableBy(Guid.Parse(req.UserId)))
             {
-                result.Errors.Add("This user cannot modify this board.");
+                result.AddError("This user cannot modify this board.");
                 return result;
             }
 

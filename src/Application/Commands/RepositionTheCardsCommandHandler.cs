@@ -22,13 +22,13 @@ namespace Application.Commands
 
         public async Task<ResultWrapper<Unit>> Handle(RepositionTheCardsCommand req, CancellationToken cancellationToken)
         {
-            var result = new ResultWrapper<Unit>() { Errors = new List<string>(), Data = Unit.Value };
+            var result = new ResultWrapper<Unit>() { Data = Unit.Value };
 
             var reqCardIds = req.CardIds.Split(',').Select(id => Guid.Parse(id)).ToHashSet().ToList();
 
             var board = await _boardRepository.FindByIdAsync(Guid.Parse(req.BoardId));
             if (!board.IsAccessiableBy(Guid.Parse(req.UserId))) {
-                result.Errors.Add("This user cannot modify this board.");
+                result.AddError("This user cannot modify this board.");
                 return result;
             }
 
@@ -36,7 +36,7 @@ namespace Application.Commands
             try {
                 cards = _cardService.GetCards(board, Guid.Parse(req.UserId), Guid.Parse(req.CardGroupId), reqCardIds);
             } catch (Exception e) {
-                result.Errors.Add(e.Message);
+                result.AddError(e.Message);
                 return result;
             }
 
@@ -45,7 +45,7 @@ namespace Application.Commands
 
             if (!cardIds.SetEquals(reqCardIds.ToHashSet()))
             {
-                result.Errors.Add("You should provide all of the Ids for the cards");
+                result.AddError("You should provide all of the Ids for the cards");
                 return result;
             }
 
@@ -55,11 +55,12 @@ namespace Application.Commands
             {
                 var card = cards.Single(c => c.CardId == id);
                 card.ChangePosition(pos++);
-            });            
+            });
 
             // Adding te activity
             var cardGroupName = board.CardGroups.Single( cg => cg.CardGroupId == Guid.Parse(req.CardGroupId)).Name;
-            var activity = Activity.New(board.Owner, $"Cards in the group named {cardGroupName} by {board.Owner.Username}", board);
+            var user = board.OwnerWithId(Guid.Parse(req.UserId));
+            var activity = Activity.New(user, $"Cards in the group named {cardGroupName} by {user.Username}", board);
             board.AddActivity(activity);
 
             await _boardRepository.UpdateAsync(board);

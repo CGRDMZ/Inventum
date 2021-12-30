@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Models;
 using Domain;
 using MediatR;
+using System.Linq;
 
 namespace Application.Commands
 {
@@ -23,14 +24,11 @@ namespace Application.Commands
         {
             var board = await _boardRepository.FindByIdAsync(Guid.Parse(command.BoardId));
 
-            var result = new ResultWrapper<CardGroupDto>()
-            {
-                Errors = new List<string>()
-            };
+            var result = new ResultWrapper<CardGroupDto>();
 
-            if (board.Owner.UserId != Guid.Parse(command.OwnerUserId))
+            if (board.IsAccessiableBy(Guid.Parse(command.OwnerUserId)))
             {
-                result.Errors.Add("Only owner can make updates to a board.");
+                result.AddError("Only owner can make updates to a board.");
             }
 
             if (!result.Success) {
@@ -40,7 +38,8 @@ namespace Application.Commands
             board.AddNewCardGroup(command.CardGroupName ?? null);
 
             // Adding the activity
-            var activity = Activity.New(board.Owner, $"New card group was added by {board.Owner.Username}", board);
+            var user = board.Owners.Where(u => u.UserId == Guid.Parse(command.OwnerUserId)).Single();
+            var activity = Activity.New(user, $"New card group was added by {user.Username}", board);
             board.AddActivity(activity);
 
             await _boardRepository.UpdateAsync(board);

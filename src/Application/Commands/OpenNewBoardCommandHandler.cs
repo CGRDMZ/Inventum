@@ -40,7 +40,7 @@ namespace Application.Commands
             }
 
             // Adding the activity
-            var activity = Activity.New(board.Owner, $"Board was created by {board.Owner.Username}", board);
+            var activity = Activity.New(owner, $"Board was created by {owner.Username}", board);
             board.AddActivity(activity);
 
             return (await _boardRepository.AddAsync(board)).BoardId;

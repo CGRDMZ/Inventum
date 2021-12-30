@@ -27,11 +27,13 @@ namespace Infrastructure.Identity
             };
             var result = await _userManager.CreateAsync(newAppUser, user.Password);
 
-
-            return new ResultWrapper<Guid>() {
-                Errors = result.Errors.Select(e => e.Description).ToList(),
+            var res = new ResultWrapper<Guid>() {
                 Data = newAppUser.Id
             };
+
+            result.Errors.ToList().ForEach(err => res.AddError(err.Description));
+
+            return res;
 
         }
 

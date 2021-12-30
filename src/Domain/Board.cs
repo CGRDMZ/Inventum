@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Domain
 {
@@ -8,7 +9,9 @@ namespace Domain
         public Guid BoardId { get; private set; }
         public string Name { get; private set; }
         public Color BgColor { get; private set; }
-        public User Owner { get; private set; }
+
+        private List<User> owners = new List<User>();
+        public IReadOnlyCollection<User> Owners => owners.AsReadOnly();
 
         private List<CardGroup> cardGroups = new List<CardGroup>();
         public IReadOnlyCollection<CardGroup> CardGroups => cardGroups.AsReadOnly();
@@ -24,16 +27,25 @@ namespace Domain
             BoardId = Guid.NewGuid();
             Name = name;
             BgColor = bgColor;
-            Owner = owner;
+
+            owners.Add(owner);
 
             cardGroups = new List<CardGroup>();
             activities = new List<Activity>();
         }
 
-        public void AssignTo(User user)
+        public void AddNewOwner(User user)
         {
-            Owner = user;
+            if (user == null) throw new Exception("User can not be null.");
+
+            var existingUsers = owners.Where(u => u.UserId == user.UserId).ToList();
+            if (existingUsers.Count > 0) {
+                throw new Exception("There is already a owner with this Id");
+            }
+
+            owners.Add(user);
         }
+
 
         public void ChangeColorTo(Color color)
         {
@@ -55,6 +67,10 @@ namespace Domain
             activities.Add(activity);
         }
 
+        public User OwnerWithId(Guid userId) {
+            return Owners.Where(u => u.UserId == userId).Single();
+        }
+
         public void AddNewCardGroup(string name)
         {
             if (name == null)
@@ -68,7 +84,9 @@ namespace Domain
 
         public bool IsAccessiableBy(Guid userId)
         {
-            return Owner.UserId == userId;
+            var canAccess = owners.Any(u => u.UserId == userId);
+
+            return canAccess;
         }
 
         public static Board CreateEmptyBoard(User owner)

@@ -8,7 +8,13 @@ namespace Application
 
         public TData Data { get; init; }
 
-        public List<string> Errors { get; init; }
+        private List<string> errors = new List<string>();
+        public IReadOnlyCollection<string> Errors => errors.AsReadOnly();
+
+        public ResultWrapper<TData> AddError(string errorMessage) {
+            errors.Add(errorMessage);
+            return this;
+        }
 
     }
 }

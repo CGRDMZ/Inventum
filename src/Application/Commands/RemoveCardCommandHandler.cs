@@ -22,19 +22,20 @@ namespace Application.Commands
 
         public async Task<ResultWrapper<Unit>> Handle(RemoveCardCommand req, CancellationToken cancellationToken)
         {
-            var result = new ResultWrapper<Unit>() { Errors = new List<string>(), Data = Unit.Value };
+            var result = new ResultWrapper<Unit>() { Data = Unit.Value };
 
             var board = await _boardRepository.FindByIdAsync(Guid.Parse(req.BoardId));
             if (!board.IsAccessiableBy(Guid.Parse(req.UserId)))
             {
-                result.Errors.Add("This user cannot modify this board.");
+                result.AddError("This user cannot modify this board.");
                 return result;
             }
 
             var card = _cardService.GetCards(board, Guid.Parse(req.UserId), Guid.Parse(req.CardGroupId), new[] { Guid.Parse(req.CardId) }).Single();
 
             // Adding the activity
-            var activity = Activity.New(board.Owner, $"Card with the content \"{card.Content}\" was deleted by {board.Owner.Username}", board);
+            var user = board.OwnerWithId(Guid.Parse(req.UserId));
+            var activity = Activity.New(user, $"Card with the content \"{card.Content}\" was deleted by {user.Username}", board);
             board.AddActivity(activity);
             
             card.RemoveFromGroup();

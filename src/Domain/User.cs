@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Domain
@@ -13,6 +14,10 @@ namespace Domain
 
         public IReadOnlyCollection<Board> Boards => boards.AsReadOnly();
 
+
+        private List<Invitation> invitations = new List<Invitation>();
+        public IReadOnlyCollection<Invitation> Invitations => invitations.AsReadOnly();
+
         public User() {}
 
         public User(Guid userId, string username) {
@@ -23,6 +28,38 @@ namespace Domain
             UserId = userId;
             Username = username;
         }
+
+        public void ReceiveInvitation(Invitation invitation) {
+            if (invitation == null) {
+                throw new ArgumentNullException(nameof(Invitation));
+            }
+
+            var alreadyOwner = boards.Find(b => b == invitation.InvitedTo) != null;
+            if (alreadyOwner) {
+                throw new Exception("User is already a owner of this board.");
+            }
+
+            var alreadyInvited = invitations.Find(i => i == invitation) != null;
+            if (alreadyInvited) {
+                throw new Exception("User has already received an invitation to this board.");
+            }
+
+
+            invitations.Add(invitation);
+        }
+
+        public void AcceptInvitation(Invitation invitation) {
+            var inv = invitations.Single(i => i == invitation);
+
+            var board = invitation.InvitedTo;
+            if (board == null) {
+                throw new ArgumentNullException(nameof(Board));
+            }
+
+            board.AddNewOwner(this);
+        }
+
+
 
 
         public void OpenNewBoard() {
