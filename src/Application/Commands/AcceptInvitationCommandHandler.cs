@@ -34,7 +34,7 @@ namespace Application.Commands
                 return result.AddError($"No invitation with this id: {req.InvitationId}");
             }
 
-            if (!invitation.InvitedTo.IsAccessiableBy(Guid.Parse(req.UserId))) {
+            if (invitation.InvitedUser.UserId != Guid.Parse(req.UserId)) {
                 return result.AddError($"This user with id: {req.UserId} is not allowed to invite others to this board.");
             }
 

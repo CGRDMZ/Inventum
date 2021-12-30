@@ -33,6 +33,21 @@
             </div>
         }
     </div>
+    @foreach (var invitation in Model.Invitations)
+    { 
+        
+        <div>
+        Invited to: @invitation.InvitedTo
+        <br>
+        <form action="~/Board/AcceptInvite/@invitation.InvitationId?accepted=true" method="post">
+            <button type="submit">Accept</button>
+        </form>
+        <form action="~/Board/AcceptInvite/@invitation.InvitationId?accepted=false" method="post">
+            <button type="submit">Reject</button>
+        </form>
+
+        </div>
+    }
 </div>
 
 @section Scripts {

@@ -101,6 +101,12 @@ namespace MvcApp
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "sendInvitation",
+                    pattern: "{controller=Board}/{boardId}/{action=InviteUser}");
+                endpoints.MapControllerRoute(
+                    name: "acceptInvitation",
+                    pattern: "{controller=Board}/AcceptInvite/{invitationId}/{action=AcceptInvitation}");
             });
         }
     }

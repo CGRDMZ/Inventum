@@ -24,6 +24,7 @@ namespace Application.Queries
             var user = await _userRepository.FindByIdAsync(Guid.Parse(request.UserId));
             var invitations = user.Invitations;
 
+
             return invitations.Where(i => !i.IsDeleted).Select(i => new InvitationDto()
             {
                 InvitationId = i.InvitationId.ToString(),

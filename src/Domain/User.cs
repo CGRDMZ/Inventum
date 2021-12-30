@@ -39,7 +39,7 @@ namespace Domain
                 throw new Exception("User is already a owner of this board.");
             }
 
-            var alreadyInvited = invitations.Find(i => i == invitation) != null;
+            var alreadyInvited = invitations.Find(i => i.InvitedTo == invitation.InvitedTo) != null;
             if (alreadyInvited) {
                 throw new Exception("User has already received an invitation to this board.");
             }

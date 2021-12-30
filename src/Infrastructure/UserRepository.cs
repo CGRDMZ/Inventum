@@ -34,7 +34,13 @@ namespace Infrastructure
 
         public async Task<User> FindByIdAsync(Guid id)
         {
-            return await _context.Users.Include(u => u.Boards).FirstOrDefaultAsync(u => u.UserId == id);
+            return await _context.Users
+            .Include(u => u.Invitations)
+                .ThenInclude(i => i.InvitedUser)
+            .Include(u => u.Invitations)
+                .ThenInclude(i => i.InvitedTo)
+            .Include(u => u.Boards)
+            .FirstOrDefaultAsync(u => u.UserId == id);
         }
 
         public async Task<User> FindUserByUsername(string username)
@@ -51,6 +57,6 @@ namespace Infrastructure
 
         }
 
-        
+
     }
 }
