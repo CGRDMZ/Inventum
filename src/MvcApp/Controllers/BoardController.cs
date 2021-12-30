@@ -37,6 +37,11 @@ namespace MvcApp.Controllers
 
             _logger.LogInformation(result.Count.ToString());
 
+            var invitationResult = await _mediator.Send(new InvitationsByUserIdQuery()
+            {
+                UserId = userId,
+            });
+
             var vm = new BoardViewModel()
             {
                 Boards = result.Select(b =>
@@ -45,7 +50,8 @@ namespace MvcApp.Controllers
                     BoardId = b.BoardId,
                     BoardName = b.Name,
                     BgColor = b.BgColor,
-                }).ToList()
+                }).ToList(),
+                Invitations = invitationResult
             };
 
             return View(vm);
@@ -78,6 +84,50 @@ namespace MvcApp.Controllers
             };
 
             return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> InviteUser(string boardId, BoardDetailViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(model);
+            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _mediator.Send(new InviteUserToBoardCommand()
+            {
+                InvitedUserUsername = model.InviteUserModel.Username,
+                BoardId = boardId,
+                InvitedBy = userId
+            });
+
+            if (result.Success)
+            {
+                return Redirect($"~/Board/Detail/{boardId}");
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AcceptInvitation(BoardViewModel model, string invitationId, bool accepted)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new {});
+            }
+
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _mediator.Send(new AcceptInvitationCommand()
+            {
+                InvitationId = invitationId,
+                UserId = userId,
+                Accepted = accepted
+            });
+            return Json(result);
         }
 
         [HttpPost]
@@ -123,6 +173,7 @@ namespace MvcApp.Controllers
             var result = await _mediator.Send(new AddNewCardToCardGroupCommand()
             {
                 BoardId = boardId,
+                UserId = userId,
                 CardGroupId = cardGroupId,
                 Content = model.CreateNewCardModel.Content,
                 BgColor = model.CreateNewCardModel.BgColor
@@ -135,7 +186,6 @@ namespace MvcApp.Controllers
         [HttpPost]
         public async Task<IActionResult> AddNewBoard(BoardViewModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return Redirect("~/Board");

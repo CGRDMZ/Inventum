@@ -26,7 +26,7 @@ namespace Application.Commands
 
             var result = new ResultWrapper<CardGroupDto>();
 
-            if (board.IsAccessiableBy(Guid.Parse(command.OwnerUserId)))
+            if (!board.IsAccessiableBy(Guid.Parse(command.OwnerUserId)))
             {
                 result.AddError("Only owner can make updates to a board.");
             }

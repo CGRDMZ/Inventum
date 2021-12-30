@@ -39,7 +39,7 @@ namespace Domain
                 throw new Exception("User is already a owner of this board.");
             }
 
-            var alreadyInvited = invitations.Find(i => i == invitation) != null;
+            var alreadyInvited = invitations.Find(i => i.InvitedTo == invitation.InvitedTo) != null;
             if (alreadyInvited) {
                 throw new Exception("User has already received an invitation to this board.");
             }
@@ -48,15 +48,10 @@ namespace Domain
             invitations.Add(invitation);
         }
 
-        public void AcceptInvitation(Invitation invitation) {
+        public void HandleInvitation(Invitation invitation, InvitationResult result) {
             var inv = invitations.Single(i => i == invitation);
 
-            var board = invitation.InvitedTo;
-            if (board == null) {
-                throw new ArgumentNullException(nameof(Board));
-            }
-
-            board.AddNewOwner(this);
+            inv.Handle(result);
         }
 
 

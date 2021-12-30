@@ -67,6 +67,10 @@
             </div>
         }
     </div>
+    <form action="~/Board/@Model.Board.BoardInfo.BoardId/InviteUser" method="post">
+        <input asp-for="InviteUserModel.Username">
+        <button type="submit">Invite</button>
+    </form>
 </div>
 
 @section Scripts {
