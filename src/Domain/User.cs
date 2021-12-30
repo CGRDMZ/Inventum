@@ -48,15 +48,10 @@ namespace Domain
             invitations.Add(invitation);
         }
 
-        public void AcceptInvitation(Invitation invitation) {
+        public void HandleInvitation(Invitation invitation, InvitationResult result) {
             var inv = invitations.Single(i => i == invitation);
 
-            var board = invitation.InvitedTo;
-            if (board == null) {
-                throw new ArgumentNullException(nameof(Board));
-            }
-
-            board.AddNewOwner(this);
+            inv.Handle(result);
         }
 
 
