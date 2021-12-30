@@ -9,18 +9,16 @@ using MediatR;
 
 namespace Application.Commands
 {
-    public class RemoveCardCommandHandler : IRequestHandler<RemoveCardCommand, ResultWrapper<Unit>>
+    public class RemoveBoardCommandHandler : IRequestHandler<RemoveBoardCommand, ResultWrapper<Unit>>
     {
         private readonly IBoardRepository _boardRepository;
-        private readonly ICardService _cardService;
 
-       public RemoveCardCommandHandler(IBoardRepository boardRepository, ICardService cardService)
+        public RemoveBoardCommandHandler(IBoardRepository boardRepository)
         {
             _boardRepository = boardRepository;
-            _cardService = cardService;
-        } 
-
-        public async Task<ResultWrapper<Unit>> Handle(RemoveCardCommand req, CancellationToken cancellationToken)
+            
+        }
+        public async Task<ResultWrapper<Unit>> Handle(RemoveBoardCommand req, CancellationToken cancellationToken)
         {
             var result = new ResultWrapper<Unit>() { Errors = new List<string>(), Data = Unit.Value };
 
@@ -31,13 +29,12 @@ namespace Application.Commands
                 return result;
             }
 
-            var card = _cardService.GetCards(board, Guid.Parse(req.UserId), Guid.Parse(req.CardGroupId), new[] { Guid.Parse(req.CardId) }).Single();
-
-            card.RemoveFromGroup();
-
-            await _boardRepository.UpdateAsync(board);
+           
+           
+            await _boardRepository.DeleteAsync(board.BoardId); 
 
             return result;
         }
     }
+
 }
