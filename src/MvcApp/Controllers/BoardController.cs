@@ -127,6 +127,10 @@ namespace MvcApp.Controllers
                 UserId = userId,
                 Accepted = accepted
             });
+
+            if (result.Success) {
+                return LocalRedirect("~/Board");
+            }
             return Json(result);
         }
 

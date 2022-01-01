@@ -1,53 +1,65 @@
 @model BoardViewModel
 
-<hr>
 <div class="container-fluid">
-    <div class="row justify-content-center align-items-center">
-        <div class="m-2" style="width: 18rem;">
-            <div class="card border border-dark p-1 shadow-sm">
-                <form asp-controller="Board" asp-action="AddNewBoard" method="post" class="pb-2">
-                    <div asp-validation-summary="All"></div>
-                    <div class="row flex-nowrap">
-                        <div class="col-8">
-                            <input asp-for="CreateBoardModel.BoardName" class="form-control"  placeholder="Add new board...">
-                        </div>
-                        <div class="col-4">
-                            <input asp-for="CreateBoardModel.BgColor" class="form-control form-control-color" type="color" value="#ffffff">
-                        </div>
-                    </div>
-                    <input type="submit" value="new board" class="visually-hidden">
-                </form>
-            </div>
-        </div>
-        @foreach (var board in Model.Boards)
-        {
+    <div class="row">
+        <div class="row col-12 col-md-8 justify-content-center align-items-center">
             <div class="m-2" style="width: 18rem;">
-                <div class="card shadow-sm" style="background-color: @board.BgColor;">
-                    <a asp-action="Detail" asp-route-id="@board.BoardId" class="text-decoration-none">
-                        <div class="card-body">
-                            <h5 class="card-title text-dark">@board.BoardName</h5>
-
+                <div class="card border border-dark p-1 shadow-sm">
+                    <form asp-controller="Board" asp-action="AddNewBoard" method="post" class="pb-2">
+                        <div asp-validation-summary="All"></div>
+                        <div class="row flex-nowrap">
+                            <div class="col-8">
+                                <input asp-for="CreateBoardModel.BoardName" class="form-control"
+                                    placeholder="Add new board...">
+                            </div>
+                            <div class="col-4">
+                                <input asp-for="CreateBoardModel.BgColor" class="form-control form-control-color"
+                                    type="color" value="#ffffff">
+                            </div>
                         </div>
-                    </a>
+                        <input type="submit" value="new board" class="visually-hidden">
+                    </form>
                 </div>
             </div>
-        }
-    </div>
-    @foreach (var invitation in Model.Invitations)
-    { 
-        
-        <div>
-        Invited to: @invitation.InvitedTo
-        <br>
-        <form action="~/Board/AcceptInvite/@invitation.InvitationId?accepted=true" method="post">
-            <button type="submit">Accept</button>
-        </form>
-        <form action="~/Board/AcceptInvite/@invitation.InvitationId?accepted=false" method="post">
-            <button type="submit">Reject</button>
-        </form>
+            @foreach (var board in Model.Boards)
+            {
+                <div class="m-2" style="width: 18rem;">
+                    <div class="card shadow-sm" style="background-color: @board.BgColor;">
+                        <a asp-action="Detail" asp-route-id="@board.BoardId" class="text-decoration-none">
+                            <div class="card-body">
+                                <h5 class="card-title text-dark">@board.BoardName</h5>
 
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
         </div>
-    }
+        <div class="col-12 col-md-4 mt-5 mt-md-0 row flex-column justify-content-start align-items-center">
+            <h4 class="text-center border-bottom w-50">Invitations</h4>
+            @foreach (var invitation in Model.Invitations)
+            {
+                <div class="row mx-2 col-12 shadow-sm row my-1 px-3 py-2 justify-content-start align-items-center border"
+                style="max-width: 320px; height: min-content;">
+                    <div class="col-6">
+                        <div><span class="text-muted">Invited to: </span>@invitation.InvitedTo</div>
+                        <div><span class="text-muted">Invited by: </span>@invitation.InvitedUser</div>
+                    </div>
+                    <div class="col-6 justify-content-center align-items-center">
+                        <form class="d-inline" action="~/Board/AcceptInvite/@invitation.InvitationId?accepted=true"
+                        method="post">
+                            <button class="btn btn-primary btn-sm m-1 mx-2" style="width: 100%;" type="submit">Accept</button>
+                        </form>
+                        <form class="d-inline" action="~/Board/AcceptInvite/@invitation.InvitationId?accepted=false"
+                        method="post">
+                            <button class="btn btn-danger btn-sm m-1 mx-2" style="width: 100%;" type="submit">Reject</button>
+                        </form>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
 </div>
 
 @section Scripts {
