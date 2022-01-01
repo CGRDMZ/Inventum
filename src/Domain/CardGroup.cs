@@ -26,7 +26,7 @@ namespace Domain
         {
             foreach (var card in cards)
             {
-                if (card.CardId == newCard.CardId) throw new Exception("This car already exists in the card group.");
+                if (card.CardId == newCard.CardId) throw new Exception("This card already exists in the card group.");
             }
 
             var nextPosition = calculateNextPosition();

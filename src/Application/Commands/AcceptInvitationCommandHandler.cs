@@ -38,8 +38,15 @@ namespace Application.Commands
                 return result.AddError($"This user with id: {req.UserId} is not allowed to invite others to this board.");
             }
 
+            try
+            {
+                invitation.Handle(req.Accepted ? InvitationResult.ACCEPT : InvitationResult.REJECT);
+            }
+            catch (DomainException ex)
+            {
+                return result.AddError(ex.Message);
+            }
 
-            invitation.Handle(req.Accepted ? InvitationResult.ACCEPT : InvitationResult.REJECT);
 
             await _userRepository.UpdateAsync(user);
 

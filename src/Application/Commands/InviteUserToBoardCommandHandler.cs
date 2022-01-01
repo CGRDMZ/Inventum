@@ -35,8 +35,15 @@ namespace Application.Commands
                 return res.AddError($"There is no board with this id: {req.BoardId}");
             }
 
-            var invitation = Invitation.New(board);
-            user.ReceiveInvitation(invitation);
+            try
+            {
+                var invitation = Invitation.New(board);
+                user.ReceiveInvitation(invitation);
+            }
+            catch (DomainException ex)
+            {
+                 return res.AddError(ex.Message);
+            }
 
             await _userRepository.UpdateAsync(user);
             

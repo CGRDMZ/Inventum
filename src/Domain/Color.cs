@@ -19,6 +19,7 @@ namespace Domain
         {
             return $"#{Red.ToString("X2")}{Green.ToString("X2")}{Blue.ToString("X2")}";
         }
+        
         public override int GetHashCode()
         {
             unchecked

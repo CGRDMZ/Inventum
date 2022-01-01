@@ -40,7 +40,7 @@ namespace Domain
 
             var existingUsers = owners.Where(u => u.UserId == user.UserId).ToList();
             if (existingUsers.Count > 0) {
-                throw new Exception("There is already a owner with this Id");
+                throw new DomainException("There is already a owner with this Id");
             }
 
             owners.Add(user);
@@ -55,7 +55,7 @@ namespace Domain
         public void ChangeNameTo(string newName)
         {
             if (newName.Trim() == "" || newName.Trim().Length < 3)
-                throw new ArgumentException("Board name can not be smaller than 3 characters.");
+                throw new DomainException("Board name can not be smaller than 3 characters.");
 
             Name = newName;
         }
