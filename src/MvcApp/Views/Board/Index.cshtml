@@ -24,13 +24,20 @@
             @foreach (var board in Model.Boards)
             {
                 <div class="m-2" style="width: 18rem;">
-                    <div class="card shadow-sm" style="background-color: @board.BgColor;">
-                        <a asp-action="Detail" asp-route-id="@board.BoardId" class="text-decoration-none">
-                            <div class="card-body">
-                                <h5 class="card-title text-dark">@board.BoardName</h5>
-
-                            </div>
-                        </a>
+                    <div class="px-2 card d-flex justify-content-between align-items-center flex-row shadow-sm" style="background-color: @board.BgColor;">
+                        <div>
+                            <a asp-action="Detail" asp-route-id="@board.BoardId" class="text-decoration-none">
+                                <div class="card-body">
+                                    <h5 class="card-title text-dark">@board.BoardName</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div>
+                            <form asp-controller="Board" asp-action="RemoveBoard" asp-route-id="@board.BoardId"
+                            method="post">
+                                <button class="btn btn-danger" type="submit">X</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             }
@@ -41,18 +48,20 @@
             {
                 <div class="row mx-2 col-12 shadow-sm row my-1 px-3 py-2 justify-content-start align-items-center border"
                 style="max-width: 320px; height: min-content;">
-                    <div class="col-6">
-                        <div><span class="text-muted">Invited to: </span>@invitation.InvitedTo</div>
-                        <div><span class="text-muted">Invited by: </span>@invitation.InvitedUser</div>
+                    <div class="col-6 text-center">
+                        <div><span class="text-muted text-small" style="font-size: small;">You are invited to: <br>
+                            </span><strong>@invitation.InvitedTo</strong></div>
                     </div>
                     <div class="col-6 justify-content-center align-items-center">
                         <form class="d-inline" action="~/Board/AcceptInvite/@invitation.InvitationId?accepted=true"
                         method="post">
-                            <button class="btn btn-primary btn-sm m-1 mx-2" style="width: 100%;" type="submit">Accept</button>
+                            <button class="btn btn-primary btn-sm m-1 mx-2" style="width: 100%;"
+                            type="submit">Accept</button>
                         </form>
                         <form class="d-inline" action="~/Board/AcceptInvite/@invitation.InvitationId?accepted=false"
                         method="post">
-                            <button class="btn btn-danger btn-sm m-1 mx-2" style="width: 100%;" type="submit">Reject</button>
+                            <button class="btn btn-danger btn-sm m-1 mx-2" style="width: 100%;"
+                            type="submit">Reject</button>
                         </form>
                     </div>
 

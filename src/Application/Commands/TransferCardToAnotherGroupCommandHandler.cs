@@ -55,7 +55,7 @@ namespace Application.Commands
             // Adding te activity        
             var user = board.OwnerWithId(Guid.Parse(req.UserId));
             var activity = Activity.New(user,
-                     $"Card with the content \"{card.Content}\" was tranfered from group \"{cardGroup.Name}\" " +
+                     $"Card with the content \"{card.Content}\" was transfered from group \"{cardGroup.Name}\" " +
                     $"to group \"{targetCardGroup.Name}\" by {user.Username}", board);
             board.AddActivity(activity);
 

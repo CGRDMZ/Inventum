@@ -22,6 +22,7 @@ namespace Infrastructure
 
             modelBuilder.Entity<CardGroup>().Property(cg => cg.CardGroupId).IsRequired().ValueGeneratedNever();
 
+            modelBuilder.Entity<CardGroup>().HasMany<Card>(cg => cg.Cards).WithOne(c => c.BelongsTo).OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Card>().Property(c => c.CardId).IsRequired().ValueGeneratedNever();
 
@@ -29,7 +30,15 @@ namespace Infrastructure
 
             modelBuilder.Entity<User>().HasIndex(u => u.Username);
 
-            modelBuilder.Entity<Board>().OwnsOne(b => b.BgColor);           
+            modelBuilder.Entity<Board>().OwnsOne(b => b.BgColor); 
+
+            modelBuilder.Entity<Board>().HasMany<Activity>(b => b.Activities).WithOne(a => a.BelongsTo).OnDelete(DeleteBehavior.Cascade); 
+
+            modelBuilder.Entity<Board>().HasMany<Invitation>().WithOne(o => o.InvitedTo).OnDelete(DeleteBehavior.Cascade);         
+
+            modelBuilder.Entity<Board>().HasMany<CardGroup>(b => b.CardGroups).WithOne().OnDelete(DeleteBehavior.Cascade);
+
+
 
 
             modelBuilder.Entity<Card>().OwnsOne(c => c.Color);

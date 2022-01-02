@@ -9,6 +9,7 @@ namespace Domain
         public Color Color { get; private set; }
         public int Position { get; private set; }
         public CardGroup BelongsTo { get; private set; }
+        public bool IsDeleted { get; private set; }
 
         private Card() { }
 
@@ -22,6 +23,7 @@ namespace Domain
             Color = color;
             BelongsTo = belongsTo;
             Position = position;
+            IsDeleted = false;
         }
 
         public void TransferTo(CardGroup cg) {
@@ -32,7 +34,7 @@ namespace Domain
         }
 
         public void RemoveFromGroup() {
-            BelongsTo = null;
+            IsDeleted = true;
         }
 
         public void ChangeColorTo(Color color)

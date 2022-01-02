@@ -10,9 +10,9 @@
 
     var cardGroups = Model.Board.CardGroups;
 }
-<div class="container-fluid" style="background-color: @Model.Board.BoardInfo.BgColor;height: 70%;">
+<div class="container-fluid" style="background-color: @Model.Board.BoardInfo.BgColor; min-height: 480px">
 
-    <div class="row flex-nowrap overflow-auto" style="height: 100%">
+    <div class="row flex-nowrap overflow-auto" style="min-height: 500px">
         <div class="col-3">
             <div class="card">
                 <div class="card-body">
@@ -67,10 +67,25 @@
             </div>
         }
     </div>
-    <form action="~/Board/@Model.Board.BoardInfo.BoardId/InviteUser" method="post">
-        <input asp-for="InviteUserModel.Username">
-        <button type="submit">Invite</button>
-    </form>
+    <div class="row" style="">
+        <div class="col-3">
+            <form action="~/Board/@Model.Board.BoardInfo.BoardId/InviteUser" method="post">
+                <input asp-for="InviteUserModel.Username">
+                <button type="submit">Invite</button>
+            </form>
+        </div>
+        <div class="col-9 d-inline-flex flex-nowrap overflow-scroll" style="font-size: small; text-align: center;">
+
+                @foreach (var activity in Model.Board.Activities)
+                {
+                    <div class="col-3 d-flex flex-column justify-content-center align-items-center border rounded-sm m-1 p-1" style="min-width: 240px; width: 240px;">
+                        <div class="text-italic">@activity.Message</div>
+                        <div><strong>@activity.DoneByUser</strong><div>@activity.OccuredOn</div></div>
+                        
+                    </div>
+                }
+        </div>
+    </div>
 </div>
 
 @section Scripts {

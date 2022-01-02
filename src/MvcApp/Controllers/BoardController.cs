@@ -210,6 +210,23 @@ namespace MvcApp.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> RemoveBoard(string id)
+        {
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var res = await _mediator.Send(new RemoveBoardCommand() {
+                BoardId = id,
+                UserId = userId
+            });
+            if (res.Success) {
+                return LocalRedirect("~/Board");
+            }
+
+            return Json(res);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> RemoveCard(string boardId, string cardGroupId, string cardId)
         {
             _logger.LogInformation($"card id: {cardId} is getting removed...");

@@ -29,8 +29,6 @@ namespace Application.Commands
                 return result;
             }
 
-           
-           
             await _boardRepository.DeleteAsync(board.BoardId); 
 
             return result;
