@@ -60,7 +60,7 @@ namespace Application.Commands
             // Adding the activity
             var cardGroupName = board.CardGroups.Single( cg => cg.CardGroupId == Guid.Parse(req.CardGroupId)).Name;
             var user = board.OwnerWithId(Guid.Parse(req.UserId));
-            var activity = Activity.New(user, $"Cards in the group named {cardGroupName} are repositioned by {user.Username}", board);
+            var activity = Activity.New(user, $"Cards in the group named \"{cardGroupName}\" are repositioned.", board);
             board.AddActivity(activity);
 
             await _boardRepository.UpdateAsync(board);

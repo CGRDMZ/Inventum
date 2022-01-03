@@ -4,7 +4,7 @@ namespace MvcApp.Models
 {
     public class CreateNewCardModel
     {
-        [MaxLength(30)]
+        [MaxLength(60)]
         public string Content { get; init; }
         
         public string BgColor { get; init; }

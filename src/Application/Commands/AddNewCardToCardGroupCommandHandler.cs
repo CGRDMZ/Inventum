@@ -44,7 +44,7 @@ namespace Application.Commands
 
             // Adding the activity
             var user = board.OwnerWithId(Guid.Parse(req.UserId));
-            var activity = Activity.New(user, $"New card is added by {user.Username}", board);
+            var activity = Activity.New(user, $"New card is added.", board);
             board.AddActivity(activity);
 
             await _boardRepository.UpdateAsync(board);

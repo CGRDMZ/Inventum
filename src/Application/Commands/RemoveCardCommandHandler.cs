@@ -35,7 +35,7 @@ namespace Application.Commands
 
             // Adding the activity
             var user = board.OwnerWithId(Guid.Parse(req.UserId));
-            var activity = Activity.New(user, $"Card with the content \"{card.Content}\" was deleted by {user.Username}", board);
+            var activity = Activity.New(user, $"Card with the content \"{card.Content}\" was deleted.", board);
             board.AddActivity(activity);
             
             card.RemoveFromGroup();

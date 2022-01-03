@@ -39,7 +39,7 @@ namespace Application.Commands
 
             // Adding the activity
             var user = board.Owners.Where(u => u.UserId == Guid.Parse(command.OwnerUserId)).Single();
-            var activity = Activity.New(user, $"New card group was added by {user.Username}", board);
+            var activity = Activity.New(user, $"New card group was added.", board);
             board.AddActivity(activity);
 
             await _boardRepository.UpdateAsync(board);

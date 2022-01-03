@@ -45,6 +45,9 @@ namespace Application.Commands
                  return res.AddError(ex.Message);
             }
 
+            var activity = Activity.New(user, "Invited user.", board);
+            board.AddActivity(activity);
+
             await _userRepository.UpdateAsync(user);
             
             return res;

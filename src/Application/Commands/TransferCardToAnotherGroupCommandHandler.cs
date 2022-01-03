@@ -56,7 +56,7 @@ namespace Application.Commands
             var user = board.OwnerWithId(Guid.Parse(req.UserId));
             var activity = Activity.New(user,
                      $"Card with the content \"{card.Content}\" was transfered from group \"{cardGroup.Name}\" " +
-                    $"to group \"{targetCardGroup.Name}\" by {user.Username}", board);
+                    $"to group \"{targetCardGroup.Name}\".", board);
             board.AddActivity(activity);
 
             await _boardRepository.UpdateAsync(board);

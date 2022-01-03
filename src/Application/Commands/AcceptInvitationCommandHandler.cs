@@ -47,6 +47,9 @@ namespace Application.Commands
                 return result.AddError(ex.Message);
             }
 
+            var activity = Activity.New(user, "User accepted the invitation. Welcome!", invitation.InvitedTo);
+            invitation.InvitedTo.AddActivity(activity);
+
 
             await _userRepository.UpdateAsync(user);
 
