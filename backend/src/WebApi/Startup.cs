@@ -21,6 +21,12 @@ using MediatR.Registration;
 using MediatR;
 using System.Reflection;
 using Application.Services;
+using Microsoft.AspNetCore.Identity;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using WebApi.Services;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace WebApi
 {
@@ -40,16 +46,71 @@ namespace WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT containing userid claim",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                });
+                var security =
+    new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
+                },
+                UnresolvedReference = true
+            },
+            new List<string>()
+        }
+    }; c.AddSecurityRequirement(security);
             });
 
-            services.AddDbServices(Configuration.GetConnectionString("Postgres"));
+            services.AddMediatR(typeof(OpenNewBoardCommandHandler));
 
+
+            services.AddDbServices<ApplicationDbContext>(Configuration.GetConnectionString("Postgres"));
+            services.AddDbServices<MyIdentityDbContext>(Configuration.GetConnectionString("Postgres"));
+
+
+            services.AddIdentityCore<AppUser>().AddEntityFrameworkStores<MyIdentityDbContext>().AddDefaultTokenProviders();
+
+            services.AddAuthorization().AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+              {
+                  o.RequireHttpsMetadata = false;
+                  o.TokenValidationParameters = new TokenValidationParameters
+                  {
+                      ValidateIssuer = false,
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Jwt:Secret"))),
+                      ClockSkew = TimeSpan.Zero,
+                      ValidateAudience = false,
+
+                  };
+              });
+
+            services.AddCors(o => {
+                o.AddDefaultPolicy(p => {
+                    p.AllowAnyOrigin();
+                    p.AllowAnyHeader();
+                    p.AllowAnyMethod();
+                });
+            });
 
             services.AddTransient<IBoardRepository, BoardRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IApplicationUserRepository, InMemoryApplicationUserRepository>();
+            services.AddTransient<IApplicationUserRepository, EfIdentityUserRepository>();
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICardService, CardService>();
+
+            services.AddTransient<IJwtTokenService, JwtTokenService>();
+
+            services.AddTransient<ICardLocationService, CardLocationService>();
             services.AddMediatR(typeof(OpenNewBoardCommandHandler));
         }
 
@@ -60,12 +121,20 @@ namespace WebApi
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1");
+                    c.ConfigObject.AdditionalItems.Add("persistAuthorization","true");
+                });
             }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
