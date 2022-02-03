@@ -8,11 +8,9 @@ const userClient = new Axios({
     },
 });
 
-export const getToken = (username: string, password: string, callback: ((token: string, status: number) => any)) => {
-    username = "testuser1";
-    password = "123456Aa*";
+export const getAccessToken = (username: string, password: string) => {
     const data = { username, password }
     const json_data = JSON.stringify(data);
 
-    userClient.post<string>("/getAccessToken", json_data).then((res) => callback(res.data, res.status));
+    return new Promise<{token: string, status: number}>((resolve, reject) => userClient.post<string>("/getAccessToken", json_data).then(res => resolve({token: res.data, status: res.status})));
 }

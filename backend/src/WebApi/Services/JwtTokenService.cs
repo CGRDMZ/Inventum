@@ -28,10 +28,8 @@ public class JwtTokenService : IJwtTokenService
     {
         var claims = new List<Claim>() {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.UserName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.GivenName, user.UserName)
+            new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("Jwt:Secret")));

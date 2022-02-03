@@ -5,12 +5,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Application;
 using Application.Commands;
-using Application.Interfaces;
 using Application.Models;
 using Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -33,26 +33,64 @@ namespace WebApi.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null) {
+            if (userId == null)
+            {
                 return Unauthorized("You better login.");
             }
 
-            var res = await _mediator.Send(new GetBoardsOfUserByIdQuery {
+            var res = await _mediator.Send(new GetBoardsOfUserByIdQuery
+            {
                 UserId = userId
             });
 
             return Ok(res);
         }
 
-        [HttpGet("detail")]
-        public async Task<IActionResult> CreateBoard(string boardId)
+        [HttpGet("{boardId}")]
+        public async Task<IActionResult> GetBoardDetail(string boardId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var res = await _mediator.Send(new GetBoardDetailsByIdQuery {
+            var res = await _mediator.Send(new GetBoardDetailsByIdQuery
+            {
                 UserId = userId,
                 BoardId = boardId
             });
+
+            return Ok(res);
+        }
+
+        [HttpPost("createBoard")]
+        public async Task<IActionResult> CreateBoard([FromBody] CreateBoardRequest req)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var res = await _mediator.Send(new OpenNewBoardCommand
+            {
+                UserId = userId,
+                Name = req.Name,
+                BgColor = req.Color
+            });
+
+            return Ok(res);
+        }
+
+        [HttpDelete("{boardId}")]
+        [ProducesResponseType(typeof(ResultWrapper<Unit>), 200)]
+        [ProducesResponseType(typeof(ResultWrapper<Unit>), 400)]
+        public async Task<IActionResult> DeleteBoard(string boardId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var res = await _mediator.Send(new RemoveBoardCommand
+            {
+                UserId = userId,
+                BoardId = boardId
+            });
+
+            if (!res.Success) {
+                return BadRequest(res);
+            }
 
             return Ok(res);
         }

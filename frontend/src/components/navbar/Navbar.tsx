@@ -1,21 +1,13 @@
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Link,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Center, Flex, Link, Stack, Text } from "@chakra-ui/react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import useAuth from "../../context/AuthContext";
 
 const Logo = () => {
   return (
     <Box display={{ base: "block" }}>
-      <Link as={RouterLink} to="/" style={{textDecoration: "none"}}>
+      <Link as={RouterLink} to="/" style={{ textDecoration: "none" }}>
         <Text
           fontFamily={"Caveat"}
           fontWeight={"bold"}
@@ -30,7 +22,7 @@ const Logo = () => {
 };
 
 const NavItemStack = ({ isOpen }: { isOpen: boolean }) => {
-  const { isLoading, user } = useAuth();
+  const { user, logout } = useAuth();
   return (
     <Stack
       direction={{ base: "column", md: "row" }}
@@ -41,22 +33,41 @@ const NavItemStack = ({ isOpen }: { isOpen: boolean }) => {
       w={{ base: "100%", md: "initial" }}
       mr={5}
     >
-      {!isLoading && user && (
+      {
         <>
           <Center>
-            <Text color={"white"} fontWeight={"bold"}>
-              Welcome {user.username}!
+            <Text color={"white"} fontWeight={"bold"} fontFamily={"poppins"}>
+              {user && (
+                <Text
+                  as="span"
+                  color={"white"}
+                  fontWeight={"bold"}
+                  fontFamily={"caveat"}
+                  fontSize={"2xl"}
+                >
+                  Welcome {user.username}!
+                </Text>
+              )}
             </Text>
           </Center>
-          <NavItem name="Boards" to="/boards" />
-          <NavItem name="Profile" to="onedayyouwillfindyourpath" />
+          {user ? (
+            <>
+              <NavItem name="Boards" to="/boards" />
+              <NavItem name="Profile" to="onedayyouwillfindyourpath" />
+              <Center>
+                <Button onClick={logout}>Logout</Button>
+              </Center>
+            </>
+          ) : (
+            <NavItem name="Login" to="/login" />
+          )}
         </>
-      )}
+      }
     </Stack>
   );
 };
 
-const NavItem = ({ name, to }: { name: string, to: string }) => {
+const NavItem = ({ name, to }: { name: string; to: string }) => {
   return (
     <Center>
       <Link as={RouterLink} to={to}>
@@ -101,10 +112,10 @@ const Navbar = () => {
       <Box
         w={"90%"}
         padding={"3"}
-        margin={"5"}
+        marginY={"5"}
         bgColor={"blue.500"}
         borderRadius={"lg"}
-        boxShadow={"xl"}
+        boxShadow={"sm"}
       >
         <Flex justify={"space-between"} wrap={"wrap"}>
           <Logo />
