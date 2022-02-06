@@ -2,8 +2,10 @@ namespace WebApi.Controllers;
 
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Commands;
+using Application.Queries;
 using Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 using WebApi.Services;
 
-[Route("api/[controller]")]
+[Route("api/user")]
 [ApiController]
 public class UserController : ControllerBase
 {
@@ -24,6 +26,47 @@ public class UserController : ControllerBase
         _mediator = mediator;
         _userManager = userManager;
         _jwtTokenService = jwtTokenService;
+    }
+
+    [HttpGet("invitations")]
+    public async Task<IActionResult> GetInvitations()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (userId == null) {
+            return Unauthorized("You better login.");
+        }
+
+        var res = await _mediator.Send(new InvitationsByUserIdQuery
+        {
+            UserId = userId
+        });
+
+        return Ok(res);
+    }
+
+    [HttpPost("invitations/{invitationId}/handle")]
+    public async Task<IActionResult> HandleInvitation(string invitationId, bool accept)
+    {
+
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (userId == null) {
+            return Unauthorized("You better login.");
+        }
+
+        var res = await _mediator.Send(new AcceptInvitationCommand
+        {
+            InvitationId = invitationId,
+            UserId = userId,
+            Accepted = accept
+        });
+
+        if (!res.Success) {
+            return BadRequest(res);
+        }
+
+        return Ok(res);
     }
 
     [HttpPost]

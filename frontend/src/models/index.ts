@@ -16,8 +16,9 @@ export interface BoardDetailsDto {
 }
 
 export interface ActivityDto {
-    occuredOn: Date;
-
+    occuredOn: string;
+    doneByUser: string;
+    message: string;
 }
 
 export interface CardGroupDto {
@@ -39,7 +40,12 @@ export interface BoardInfoDto {
     bgColor: string;
 }
 
-export interface loginDto {
+export interface LoginDto {
     username: string;
     password: string;
+}
+
+export interface InvitationDto {
+    invitationId: string;
+    invitedTo: string;
 }

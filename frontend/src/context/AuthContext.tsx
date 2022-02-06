@@ -11,7 +11,7 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { authApi } from "../api";
 import useUser, { jwtPayload } from "../hooks/useUser";
-import { loginDto } from "../models";
+import { LoginDto } from "../models";
 import { decodeJwt } from "../util";
 
 interface UserInfo {
@@ -22,12 +22,15 @@ interface UserInfo {
 interface AuthContextType {
   user?: UserInfo;
   token?: string;
+  loading: boolean;
   // refreshAccessToken: () => void;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+const AuthContext = createContext<AuthContextType>({
+  loading: false,
+} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
@@ -36,34 +39,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string>();
 
   const getAccessTokenMutation = useMutation(
-    (loginDto: loginDto) => {
+    (loginDto: LoginDto) => {
       return authApi.getAccessToken(loginDto.username, loginDto.password);
     },
     { mutationKey: "getAccessToken" }
   );
 
-  const login = useCallback(async (username: string, password: string) => {
-    try {
-      const res = await getAccessTokenMutation.mutateAsync({
-        username,
-        password,
-      } as loginDto);
+  const handleToken = (token: string) => {
+    const tokenPayload = decodeJwt<jwtPayload>(token);
 
-      if (res.token) {
-        const tokenPayload = decodeJwt<jwtPayload>(res.token);
+    setToken(token);
+    localStorage.setItem("access_token", token);
 
-        setToken(res.token);
-        localStorage.setItem("access_token", res.token);
-        setUser({
-          username: tokenPayload.given_name,
-          userId: tokenPayload.sub,
-        });
-        return true;
+    setUser({
+      username: tokenPayload.given_name,
+      userId: tokenPayload.sub,
+    });
+  };
+
+  const login = useCallback(
+    async (username: string, password: string) => {
+      try {
+        const res = await getAccessTokenMutation.mutateAsync({
+          username,
+          password,
+        } as LoginDto);
+
+        if (res.token) {
+          handleToken(res.token);
+          return true;
+        }
+      } catch (error) {
+        return false;
       }
-    } catch (error) {
-      return false;
-    }
-  }, [getAccessTokenMutation]);
+    },
+    [getAccessTokenMutation]
+  );
 
   const logout = useCallback(() => {
     setToken("");
@@ -72,14 +83,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     navigate("/");
   }, [navigate]);
 
-  
-
   useEffect(() => {
     const local_token = localStorage.getItem("access_token");
     if (local_token) {
-      const tokenPayload = decodeJwt<jwtPayload>(local_token);
-      setToken(local_token);
-      setUser({ username: tokenPayload.given_name, userId: tokenPayload.sub });
+      handleToken(local_token);
     }
   }, []);
 
@@ -88,9 +95,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       let tokenPayload = decodeJwt<jwtPayload>(token);
       let local_now = new Date();
 
+      let token_exp = new Date(tokenPayload.exp * 1000);
+
       // if the token is expired, just remove it.
       // we should have a refresh token to get a new one in the future instead of this.
-      if (new Date(tokenPayload.exp * 1000) < local_now) {
+      if (token_exp < local_now) {
         logout();
         console.log("token expired...");
       }
@@ -118,6 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         {
           user: user,
           token: token,
+          loading: getAccessTokenMutation.isLoading,
           login: login,
           logout: logout,
         } as AuthContextType

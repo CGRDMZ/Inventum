@@ -1,21 +1,15 @@
 import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { Box, Button, Center, Flex, Link, Stack, Text } from "@chakra-ui/react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import useAuth from "../../context/AuthContext";
+import { ReactComponent as LogoSvg } from "../../assets/logo-semibold.svg"
 
 const Logo = () => {
   return (
     <Box display={{ base: "block" }}>
       <Link as={RouterLink} to="/" style={{ textDecoration: "none" }}>
-        <Text
-          fontFamily={"Caveat"}
-          fontWeight={"bold"}
-          fontSize={"5xl"}
-          color={"yellow"}
-        >
-          Inventum
-        </Text>
+        <LogoSvg />
       </Link>
     </Box>
   );
@@ -68,11 +62,14 @@ const NavItemStack = ({ isOpen }: { isOpen: boolean }) => {
 };
 
 const NavItem = ({ name, to }: { name: string; to: string }) => {
+  const location = useLocation();
+  const isActive = location.pathname === to;
+
   return (
     <Center>
       <Link as={RouterLink} to={to}>
         <Text
-          color={"white"}
+          color={isActive ? "yellow" : "white"}
           fontFamily={"Poppins"}
           fontSize={"large"}
           fontWeight={"extrabold"}

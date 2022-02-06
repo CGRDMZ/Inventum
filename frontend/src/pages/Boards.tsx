@@ -10,6 +10,7 @@ import {
   Spinner,
   Text,
   useToast,
+  VStack,
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
@@ -18,6 +19,8 @@ import useAuth from "../context/AuthContext";
 import useBoards from "../context/BoardsContext";
 import { BoardDto } from "../models";
 import { Link as RouterLink } from "react-router-dom";
+import { debounce } from "lodash";
+import InvitationList from "../components/boards/invitations/InvitationList";
 
 const NewBoardCard = () => {
   const { addNewBoard, isCreatingNewBoard } = useBoards();
@@ -28,6 +31,8 @@ const NewBoardCard = () => {
     e.preventDefault();
     addNewBoard({ name: name, color: color });
   };
+
+  const setColorDebounced = debounce(setColor, 1);
 
   return (
     <WrapItem
@@ -54,7 +59,7 @@ const NewBoardCard = () => {
               type={"color"}
               w={"0.8"}
               value={color}
-              onChange={(e) => setColor(e.currentTarget.value)}
+              onChange={(e) => setColorDebounced(e.currentTarget.value)}
             />
           </HStack>
         </form>
@@ -132,10 +137,16 @@ const Boards = () => {
 
   return (
     <Center>
-      <Box w={"90%"}>
-        <Text fontFamily={"poppins"}>My Boards</Text>
-        {shouldShowBoards() && <BoardList boards={boards} />}
-      </Box>
+      <VStack w={"90%"} spacing="3">
+        <Box w="100%">
+          <Text fontFamily={"poppins"}>My Boards</Text>
+          {shouldShowBoards() && <BoardList boards={boards} />}
+        </Box>
+        <Box w="100%">
+          <Text fontFamily={"poppins"}>My Invitations</Text>
+          {shouldShowBoards() && <InvitationList />}
+        </Box>
+      </VStack>
     </Center>
   );
 };

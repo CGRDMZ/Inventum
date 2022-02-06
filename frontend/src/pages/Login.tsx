@@ -8,6 +8,7 @@ import {
   FormLabel,
   HStack,
   Input,
+  Spinner,
   VStack,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
@@ -15,7 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../context/AuthContext";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, loading } = useAuth();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -37,7 +38,7 @@ const Login = () => {
     <>
       <Center>
         <VStack w={"50%"} maxW={"5xl"}>
-          <form onSubmit={(e) => onSubmitLogin(e)}>
+          <form onSubmit={(e) => !loading && onSubmitLogin(e)}>
             <Center>
               <VStack>
                 {error && (
@@ -74,7 +75,7 @@ const Login = () => {
               colorScheme={"yellow"}
               color={"white"}
             >
-              Login
+              {loading ? <Spinner /> : "Login"}
             </Button>
           </form>
         </VStack>

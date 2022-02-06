@@ -3,6 +3,7 @@ import {
   Center,
   Container,
   Divider,
+  Flex,
   HStack,
   Text,
   VStack,
@@ -11,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { boardApi } from "../api";
+import SideBar from "../components/board-detail/sidebar/SideBar";
 import useAuth from "../context/AuthContext";
 import { BoardDetailsDto, CardGroupDto } from "../models";
 
@@ -57,13 +59,16 @@ const Card = ({ content, bgColor }: { content: string; bgColor: string }) => {
   );
 };
 
+
+
+
 const CardGroupList = ({
   cardGroupDtos,
 }: {
   cardGroupDtos: CardGroupDto[];
 }) => {
   return (
-    <HStack align={"start"} spacing={"5"} py={"8"} overflowX={"scroll"}>
+    <HStack align={"start"} spacing={"5"} pb="5" overflowX={"scroll"}>
       {cardGroupDtos &&
         cardGroupDtos.map((dto) => <CardGroup key={dto.cardGroupId} cardGroupDto={dto} />)}
     </HStack>
@@ -95,11 +100,12 @@ const BoardDetail = () => {
   return (
     <>
       <Center>
-        <Box w={"90%"}>
-          {boardDetails && (
+        <Flex w={"90%"}>
+          <SideBar boardInfo={boardDetails?.boardInfo || null} activities={boardDetails?.activities || null}/>
+          {boardDetails?.cardGroups && (
             <CardGroupList cardGroupDtos={boardDetails.cardGroups} />
           )}
-        </Box>
+        </Flex>
       </Center>
     </>
   );
