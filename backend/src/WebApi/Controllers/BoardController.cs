@@ -95,5 +95,107 @@ namespace WebApi.Controllers
             return Ok(res);
         }
 
+        [HttpPost("invite")]
+        public async Task<IActionResult> InviteUser([FromBody] InviteUserToBoardRequest req)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("You better login.");
+            }
+
+            var res = await _mediator.Send(new InviteUserToBoardCommand
+            {
+                InvitedBy = userId,
+                BoardId = req.BoardId,
+                InvitedUserUsername = req.InvitedUserUsername
+            });
+
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+
+            return Ok(res);
+        }
+
+        [HttpPost("handleInvitation")]
+        public async Task<IActionResult> HandleInvitation([FromBody] HandleInvitationRequest req)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("You better login.");
+            }
+
+            var res = await _mediator.Send(new AcceptInvitationCommand
+            {
+                UserId = userId,
+                InvitationId = req.InvitationId,
+                Accepted = req.Accepted
+            });
+
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+
+            return Ok(res);
+        }
+
+        [HttpPost("{boardId}/addCardGroup")]
+        public async Task<IActionResult> AddCardGroup(string boardId, [FromBody] AddCardGroupRequest req)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("You better login.");
+            }
+
+            var res = await _mediator.Send(new AddNewCardGroupToBoardCommand
+            {
+                OwnerUserId = userId,
+                BoardId = boardId,
+                CardGroupName = req.CardGroupName
+            });
+
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+
+            return Ok(res);
+        }
+
+        [HttpPost("{boardId}/cardGroup/{cardGroupId}/addCard")]
+        public async Task<IActionResult> AddCard(string boardId, string cardGroupId, [FromBody] AddCardRequest req)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("You better login.");
+            }
+
+            var res = await _mediator.Send(new AddNewCardToCardGroupCommand
+            {
+                UserId = userId,
+                BoardId = boardId,
+                CardGroupId = cardGroupId,
+                Content = req.Content,
+                BgColor = req.BgColor
+            });
+
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+
+            return Ok(res);
+        }
+
     }
 }
