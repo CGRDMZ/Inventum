@@ -1,6 +1,16 @@
-import { Box, Divider, Heading, HStack, Stack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Divider,
+  Heading,
+  HStack,
+  Input,
+  Stack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { ActivityDto, BoardDetailsDto, BoardInfoDto } from "../../../models";
 import ActivityList from "./ActivityList";
+import InviteSection from "./InviteSection";
 
 interface Props {
   boardInfo: BoardInfoDto | null;
@@ -8,8 +18,6 @@ interface Props {
 }
 
 const SideBar = ({ boardInfo, activities }: Props) => {
-
-
   return (
     <Box minW="80" maxWidth="86" mr="3">
       <Stack w="100%" borderRadius="md" bgColor={"white"}>
@@ -26,11 +34,13 @@ const SideBar = ({ boardInfo, activities }: Props) => {
           </Heading>
         </Box>
         <Divider />
-        <HStack>invite</HStack>
+        <InviteSection />
         <Divider />
         <Box p={3}>
-          <Text fontSize={"md"} fontFamily="poppins">Recent Activities</Text>
-          {<ActivityList activities={activities ||[]} />}
+          <Text fontSize={"md"} fontFamily="poppins">
+            Recent Activities
+          </Text>
+          {<ActivityList activities={activities || []} />}
         </Box>
       </Stack>
     </Box>

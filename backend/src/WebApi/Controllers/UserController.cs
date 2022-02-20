@@ -8,11 +8,13 @@ using Application.Commands;
 using Application.Queries;
 using Infrastructure.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 using WebApi.Services;
 
+[Authorize]
 [Route("api/user")]
 [ApiController]
 public class UserController : ControllerBase
@@ -69,6 +71,7 @@ public class UserController : ControllerBase
         return Ok(res);
     }
 
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> CreateNewUser(CreateNewUserRequest req)
     {
@@ -83,6 +86,7 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpPost("getAccessToken")]
     public async Task<IActionResult> GetAccessToken(GetAccessTokenRequest req)
     {

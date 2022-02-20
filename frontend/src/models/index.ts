@@ -49,3 +49,23 @@ export interface InvitationDto {
     invitationId: string;
     invitedTo: string;
 }
+
+export interface CreateCardGroupDto {
+    cardGroupName: string;
+}
+
+export interface CreateCardDto {
+    content: string;
+    bgColor: string;
+}
+
+export interface InviteUserDto {
+    boardId: string;
+    invitedUserUsername: string;
+}
+
+export interface Result<T> {
+    data: T;
+    success: string;
+    errors: string[];
+}

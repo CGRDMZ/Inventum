@@ -140,7 +140,7 @@ const Boards = () => {
       <VStack w={"90%"} spacing="3">
         <Box w="100%">
           <Text fontFamily={"poppins"}>My Boards</Text>
-          {shouldShowBoards() && <BoardList boards={boards} />}
+          <BoardList boards={boards} />
         </Box>
         <Box w="100%">
           <Text fontFamily={"poppins"}>My Invitations</Text>

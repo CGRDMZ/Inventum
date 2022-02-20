@@ -14,7 +14,9 @@ const useInvitations = () => {
     }, { enabled: !!token });
 
     const handleInvitationMutation = useMutation(({ invitationId, accept }: { invitationId: string, accept: boolean }) => {
-        return userApi.handleInvitation(invitationId, token || "", accept);
+        console.log(token);
+        
+        return userApi.handleInvitation(invitationId, accept, token!);
     }, { mutationKey: "handleInvitation" });
 
     const handleInvite = async (invitationId: string, accept: boolean) => {

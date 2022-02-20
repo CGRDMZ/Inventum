@@ -1,0 +1,34 @@
+version: '3.5'
+services:
+  rest-api:
+    build:
+      context: ./backend/
+      dockerfile: dev.dockerfile
+    volumes:
+      - ./backend:/app
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+  db:
+    image: postgres:14.2-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dev.dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENVIRONMENT=development 
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - rest-api
+
+volumes:
+  db:
+    driver: local

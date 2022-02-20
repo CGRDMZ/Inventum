@@ -27,7 +27,7 @@ const defaultValue = {
   error: [] as string[],
 } as BoardContextType;
 
-const BoardContext = createContext<BoardContextType>(defaultValue);
+const BoardsContext = createContext<BoardContextType>(defaultValue);
 
 export const BoardsProvider = ({ children }: { children: ReactNode }) => {
   const { user, token } = useAuth();
@@ -56,7 +56,7 @@ export const BoardsProvider = ({ children }: { children: ReactNode }) => {
       return boardApi.addBoard(boardDto, token ?? "");
     },
     {
-      mutationKey: "addBoard"
+      mutationKey: "addBoard",
     }
   );
 
@@ -108,7 +108,7 @@ export const BoardsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <BoardContext.Provider
+    <BoardsContext.Provider
       value={{
         boards,
         isLoading: isLoading,
@@ -119,12 +119,12 @@ export const BoardsProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-    </BoardContext.Provider>
+    </BoardsContext.Provider>
   );
 };
 
 const useBoards = () => {
-  return useContext(BoardContext);
+  return useContext(BoardsContext);
 };
 
 export default useBoards;
