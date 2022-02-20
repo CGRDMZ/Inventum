@@ -93,8 +93,10 @@ namespace WebApi
                   };
               });
 
-            services.AddCors(o => {
-                o.AddDefaultPolicy(p => {
+            services.AddCors(o =>
+            {
+                o.AddDefaultPolicy(p =>
+                {
                     p.AllowAnyOrigin();
                     p.AllowAnyHeader();
                     p.AllowAnyMethod();
@@ -120,15 +122,32 @@ namespace WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1");
-                    c.ConfigObject.AdditionalItems.Add("persistAuthorization","true");
-                });
-            }
 
-            app.UseHttpsRedirection();
+                // make domain migrations
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var ctx = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                    if (ctx.Database.GetPendingMigrations().Any())
+                    {
+                        ctx.Database.Migrate();
+                    }
+                }
+                // make identity migrations
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var ctx = scope.ServiceProvider.GetService<MyIdentityDbContext>();
+                    if (ctx.Database.GetPendingMigrations().Any())
+                    {
+                        ctx.Database.Migrate();
+                    }
+                }
+            }
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1");
+                c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true");
+            });
 
             app.UseRouting();
 
