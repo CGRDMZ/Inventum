@@ -89,7 +89,8 @@ namespace WebApi.Controllers
                 BoardId = boardId
             });
 
-            if (!res.Success) {
+            if (!res.Success)
+            {
                 return BadRequest(res);
             }
 
@@ -188,6 +189,59 @@ namespace WebApi.Controllers
                 CardGroupId = cardGroupId,
                 Content = req.Content,
                 BgColor = req.BgColor
+            });
+
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+
+            return Ok(res);
+        }
+
+        [HttpPost("{boardId}/cardGroup/{cardGroupId}/repositionCards")]
+        public async Task<IActionResult> RepositionCards(string boardId, string cardGroupId, [FromQuery] string cardIds)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("You better login.");
+            }
+
+            var res = await _mediator.Send(new RepositionTheCardsCommand
+            {
+                UserId = userId,
+                BoardId = boardId,
+                CardGroupId = cardGroupId,
+                CardIds = cardIds
+            });
+
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+
+            return Ok(res);
+        }
+
+        [HttpPost("{boardId}/transferCard/{cardId}")]
+        public async Task<IActionResult> TransferCard(string boardId, string fromCardGroup, string toCardGroup, string cardId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("You better login.");
+            }
+
+            var res = await _mediator.Send(new TransferCardToAnotherGroupCommand
+            {
+                UserId = userId,
+                BoardId = boardId,
+                CardGroupId = fromCardGroup,
+                TargetCardGroupId = toCardGroup,
+                CardId = cardId
             });
 
             if (!res.Success)

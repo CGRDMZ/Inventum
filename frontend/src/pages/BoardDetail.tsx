@@ -8,6 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { log } from "console";
 import { useEffect, useState } from "react";
 import {
   DragDropContext,
@@ -102,6 +103,7 @@ const CardGroupList = ({
 }: {
   cardGroupDtos: CardGroupDto[];
 }) => {
+  console.log(cardGroupDtos);
   return (
     <HStack align={"start"} spacing={"5"} pb="5" overflowX={"scroll"}>
       {cardGroupDtos &&
@@ -123,26 +125,7 @@ const CardGroupList = ({
 };
 
 const BoardDetail = () => {
-  const { boardDetails } = useBoard();
-  return (
-    <BoardContextProvider>
-      <Center>
-        <Flex w={"90%"}>
-          <SideBar
-            boardInfo={boardDetails?.boardInfo || null}
-            activities={boardDetails?.activities || null}
-          />
-          {boardDetails?.cardGroups && (
-            <CardGroupList cardGroupDtos={boardDetails.cardGroups} />
-          )}
-        </Flex>
-      </Center>
-    </BoardContextProvider>
-  );
-};
-
-const BoardDetailWrapper = () => {
-  const { boardDetails } = useBoard();
+  const { boardDetails, repositionCards, transferCard } = useBoard();
 
   function onDragEnd(result: DropResult, provided: ResponderProvided) {
     if (!result.destination) return;
@@ -155,20 +138,40 @@ const BoardDetailWrapper = () => {
     if (result.destination.droppableId === result.source.droppableId) {
       // reposition the list request.
       console.log("reposition the list request");
-      
+      repositionCards(
+        result.draggableId,
+        result.source.droppableId,
+        result.destination.index
+      );
     } else {
       // move the card request and then reposition the list.
       console.log("move the card request and then reposition the list");
-      
+      transferCard(result.source.droppableId, result.destination.droppableId, result.draggableId, result.destination.index);
     }
-
   }
 
   return (
-    <BoardContextProvider>
       <DragDropContext onDragEnd={onDragEnd}>
-        <BoardDetail />
+        <Center>
+          <Flex w={"90%"}>
+            <SideBar
+              boardInfo={boardDetails?.boardInfo || null}
+              activities={boardDetails?.activities || null}
+            />
+            {boardDetails?.cardGroups && (
+              <CardGroupList cardGroupDtos={boardDetails.cardGroups} />
+            )}
+          </Flex>
+        </Center>
       </DragDropContext>
+  );
+};
+
+const BoardDetailWrapper = () => {
+
+  return (
+    <BoardContextProvider>
+      <BoardDetail />
     </BoardContextProvider>
   );
 };

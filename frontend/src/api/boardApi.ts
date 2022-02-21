@@ -84,3 +84,26 @@ export const inviteUser = async (dto: InviteUserDto, token: string) => {
 
     return result.data
 }
+
+export const repositionCards = async (boardId: string, cardGroupId: string, cardIds: string[], token: string) => {
+    const idsJoined = cardIds.join(",")
+    const result = await boardClient.post(`/${boardId}/cardGroup/${cardGroupId}/repositionCards?cardIds=${idsJoined}`, JSON.stringify({}), {
+        headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+        }
+    });
+
+    return result.status
+}
+
+export const transferCard = async (boardId: string, fromCardGroupId: string, cardId: string, targetCardGroupId: string, token: string) => {
+    const result = await boardClient.post(`/${boardId}/transferCard/${cardId}?toCardGroup=${targetCardGroupId}&fromCardGroup=${fromCardGroupId}`, JSON.stringify({}), {
+        headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+        }
+    });
+
+    return result.status
+}

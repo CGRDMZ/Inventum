@@ -25,6 +25,17 @@ interface BoardContextProps {
   createCard: (cardGroupId: string, card: CreateCardDto) => void;
   inviteUser: (inviteUser: InviteUserDto) => void;
   refreshBoard: () => void;
+  repositionCards: (
+    cardId: string,
+    cardGroupId: string,
+    targetPosition: number
+  ) => void;
+  transferCard: (
+    fromCardGroupId: string,
+    toCardGroupId: string,
+    cardId: string,
+    targetPosition: number
+  ) => void;
 }
 
 const BoardContext = createContext<BoardContextProps>({} as BoardContextProps);
@@ -36,9 +47,11 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
   const { user, token } = useAuth();
   const { boardId } = useParams();
 
+  console.log(boardDetails);
+
   const toast = useToast();
 
-  const { data, refetch } = useQuery(
+  const { data, isFetching, refetch } = useQuery(
     `boardDetail${boardId}`,
     async () => {
       return await boardApi.getBoardDetails(boardId!, token!);
@@ -52,7 +65,7 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
 
       setBoardDetails(jsonData);
     }
-  }, [data]);
+  }, [data, isFetching]);
 
   const createCardGroupMutation = useMutation(
     "createCardGroup",
@@ -90,6 +103,45 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
     }
   );
 
+  const repositionCardsMutation = useMutation(
+    "repositionCards",
+    async ({
+      cardGroupId,
+      cardIds,
+    }: {
+      cardGroupId: string;
+      cardIds: string[];
+    }) => {
+      return await boardApi.repositionCards(
+        boardDetails!.boardInfo.boardId,
+        cardGroupId,
+        cardIds,
+        token!
+      );
+    }
+  );
+
+  const transferCardMutation = useMutation(
+    "transferCard",
+    async ({
+      fromCardGroupId,
+      cardId,
+      targetCardGroupId,
+    }: {
+      fromCardGroupId: string;
+      cardId: string;
+      targetCardGroupId: string;
+    }) => {
+      return await boardApi.transferCard(
+        boardDetails!.boardInfo.boardId,
+        fromCardGroupId,
+        cardId,
+        targetCardGroupId,
+        token!
+      );
+    }
+  );
+
   const createCardGroup = async (cardGroup: CreateCardGroupDto) => {
     await createCardGroupMutation.mutateAsync(cardGroup);
     refetch();
@@ -114,7 +166,12 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
         });
       } else {
         resJson.errors.map((val) =>
-          toast({ status: "error", title: val, duration: 1000, isClosable: true })
+          toast({
+            status: "error",
+            title: val,
+            duration: 1000,
+            isClosable: true,
+          })
         );
       }
     }
@@ -122,6 +179,89 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const refreshBoard = () => {};
+
+  const repositionCards = async (
+    cardId: string,
+    cardGroupId: string,
+    targetPosition: number
+  ) => {
+    const newState = JSON.parse(
+      JSON.stringify(boardDetails)
+    ) as BoardDetailsDto;
+
+    const cardGroup = newState.cardGroups.find(
+      (val) => val.cardGroupId === cardGroupId
+    );
+
+    if (cardGroup) {
+      const card = cardGroup.cards.find((val) => val.cardId === cardId);
+      if (card) {
+        // remove the dragged card from the list
+        const cardIndex = cardGroup.cards.indexOf(card);
+        cardGroup.cards.splice(cardIndex, 1);
+
+        // insert the card at the target position
+        cardGroup.cards.splice(targetPosition, 0, card);
+
+        // update the backend
+        const cardIds = cardGroup.cards.map((val) => val.cardId);
+        repositionCardsMutation.mutateAsync({
+          cardGroupId: cardGroup.cardGroupId,
+          cardIds,
+        });
+
+        setBoardDetails(newState);
+      }
+    }
+  };
+
+  const transferCard = async (
+    fromCardGroupId: string,
+    toCardGroupId: string,
+    cardId: string,
+    targetPosition: number
+  ) => {
+    const newState = JSON.parse(
+      JSON.stringify(boardDetails)
+    ) as BoardDetailsDto;
+
+    const fromCardGroup = newState.cardGroups.find(
+      (val) => val.cardGroupId === fromCardGroupId
+    );
+
+    const targetCardGroup = newState.cardGroups.find(
+      (val) => val.cardGroupId === toCardGroupId
+    );
+
+    if (fromCardGroup && targetCardGroup) {
+      const card = fromCardGroup.cards.find((val) => val.cardId === cardId);
+      if (card) {
+        // remove the dragged card from the list
+        const cardIndex = fromCardGroup.cards.indexOf(card);
+        fromCardGroup.cards.splice(cardIndex, 1);
+
+        // insert the card at the target position
+        targetCardGroup.cards.splice(targetPosition, 0, card);
+        
+        setBoardDetails(newState);
+        
+        // update the backend
+        const res = await transferCardMutation.mutateAsync({
+          fromCardGroupId,
+          targetCardGroupId: toCardGroupId,
+          cardId,
+        });
+
+        const cardIds = targetCardGroup.cards.map((val) => val.cardId);
+        repositionCardsMutation.mutateAsync({
+          cardGroupId: targetCardGroup.cardGroupId,
+          cardIds,
+        });
+        
+        
+      }
+    }
+  };
 
   return (
     <BoardContext.Provider
@@ -131,6 +271,8 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
         createCard,
         inviteUser,
         refreshBoard,
+        repositionCards,
+        transferCard,
         isLoading: false,
       }}
     >

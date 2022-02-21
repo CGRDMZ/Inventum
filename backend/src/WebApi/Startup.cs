@@ -157,6 +157,7 @@ namespace WebApi
                 c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true");
             });
 
+
             app.UseRouting();
 
             app.UseCors();
