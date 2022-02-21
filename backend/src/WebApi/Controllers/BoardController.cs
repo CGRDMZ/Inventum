@@ -16,7 +16,7 @@ namespace WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/board")]
+    [Route("board")]
     public class BoardController : ControllerBase
     {
         private IMediator _mediator;
@@ -25,6 +25,7 @@ namespace WebApi.Controllers
         {
             _mediator = mediator;
         }
+
 
 
         [HttpGet]

@@ -15,7 +15,7 @@ using WebApi.Models;
 using WebApi.Services;
 
 [Authorize]
-[Route("api/user")]
+[Route("user")]
 [ApiController]
 public class UserController : ControllerBase
 {

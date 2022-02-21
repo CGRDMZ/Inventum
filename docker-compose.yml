@@ -3,11 +3,7 @@ services:
   rest-api:
     build:
       context: ./backend/
-      dockerfile: dev.dockerfile
-    volumes:
-      - ./backend:/app
-    ports:
-      - 5000:5000
+      dockerfile: dockerfile
     depends_on:
       - db
   db:
@@ -18,14 +14,11 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: dev.dockerfile
-    volumes:
-      - ./frontend:/app
+      dockerfile: dockerfile
     ports:
-      - 3000:3000
+      - 3000:80
     environment:
-      - NODE_ENVIRONMENT=development 
-      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENVIRONMENT=production
     depends_on:
       - rest-api
 
