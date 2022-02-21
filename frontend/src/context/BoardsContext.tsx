@@ -18,6 +18,7 @@ interface BoardContextType {
   error: string[];
   addNewBoard: (board: CreateBoardDto) => void;
   removeBoard: (boardId: string) => void;
+  refreshBoards: () => void;
 }
 
 const defaultValue = {
@@ -107,6 +108,10 @@ export const BoardsProvider = ({ children }: { children: ReactNode }) => {
     refetchBoards();
   };
 
+  const refreshBoards = async () => {
+    await refetchBoards();
+  };
+
   return (
     <BoardsContext.Provider
       value={{
@@ -116,6 +121,7 @@ export const BoardsProvider = ({ children }: { children: ReactNode }) => {
         error,
         addNewBoard,
         removeBoard,
+        refreshBoards
       }}
     >
       {children}

@@ -26,7 +26,6 @@ const Login = () => {
 
   const onSubmitLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(username, password);
     const res = await login(username, password);
     setUsername("");
     setPassword("");

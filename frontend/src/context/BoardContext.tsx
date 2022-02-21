@@ -47,8 +47,6 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
   const { user, token } = useAuth();
   const { boardId } = useParams();
 
-  console.log(boardDetails);
-
   const toast = useToast();
 
   const { data, isFetching, refetch } = useQuery(

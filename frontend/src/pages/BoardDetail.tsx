@@ -103,7 +103,6 @@ const CardGroupList = ({
 }: {
   cardGroupDtos: CardGroupDto[];
 }) => {
-  console.log(cardGroupDtos);
   return (
     <HStack align={"start"} spacing={"5"} pb="5" overflowX={"scroll"}>
       {cardGroupDtos &&
@@ -137,7 +136,6 @@ const BoardDetail = () => {
 
     if (result.destination.droppableId === result.source.droppableId) {
       // reposition the list request.
-      console.log("reposition the list request");
       repositionCards(
         result.draggableId,
         result.source.droppableId,
@@ -145,7 +143,6 @@ const BoardDetail = () => {
       );
     } else {
       // move the card request and then reposition the list.
-      console.log("move the card request and then reposition the list");
       transferCard(result.source.droppableId, result.destination.droppableId, result.draggableId, result.destination.index);
     }
   }

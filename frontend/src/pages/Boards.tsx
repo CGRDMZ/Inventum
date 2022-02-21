@@ -129,10 +129,6 @@ const Boards = () => {
   const { isLoading, isCreatingNewBoard, error, boards, addNewBoard } =
     useBoards();
 
-  useEffect(() => {
-    console.log(boards);
-  }, [boards]);
-
   const shouldShowBoards = () => boards && boards.length !== 0;
 
   return (
