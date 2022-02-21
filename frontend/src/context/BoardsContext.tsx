@@ -1,4 +1,4 @@
-import { Button, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import {
   createContext,
   ReactNode,

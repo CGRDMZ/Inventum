@@ -140,7 +140,7 @@ const Boards = () => {
         </Box>
         <Box w="100%">
           <Text fontFamily={"poppins"}>My Invitations</Text>
-          {shouldShowBoards() && <InvitationList />}
+          <InvitationList />
         </Box>
       </VStack>
     </Center>

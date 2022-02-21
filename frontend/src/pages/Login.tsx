@@ -1,18 +1,17 @@
 import {
   Alert,
   AlertIcon,
+  Box,
   Button,
   Center,
   FormControl,
-  FormHelperText,
   FormLabel,
-  HStack,
   Input,
   Spinner,
   VStack,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../context/AuthContext";
 
 const Login = () => {
@@ -29,14 +28,17 @@ const Login = () => {
     const res = await login(username, password);
     setUsername("");
     setPassword("");
-    if (!res) setError("Something went wrong.");
+    if (!res) {
+      setError("Something went wrong.");
+      return;
+    }
     navigate("/");
   };
 
   return (
     <>
-      <Center>
-        <VStack w={"50%"} maxW={"5xl"}>
+      <Center mt="24">
+        <Box p="6" bgColor="white" borderRadius="md" boxShadow="lg">
           <form onSubmit={(e) => !loading && onSubmitLogin(e)}>
             <Center>
               <VStack>
@@ -63,21 +65,20 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.currentTarget.value)}
                   />
-                  <FormHelperText>We'll never share your email.</FormHelperText>
                 </FormControl>
               </VStack>
             </Center>
             <Button
               type={"submit"}
               w={"full"}
-              my={1}
+              mt={4}
               colorScheme={"yellow"}
               color={"white"}
             >
               {loading ? <Spinner /> : "Login"}
             </Button>
           </form>
-        </VStack>
+        </Box>
       </Center>
     </>
   );

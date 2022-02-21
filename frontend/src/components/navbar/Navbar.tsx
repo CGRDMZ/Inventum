@@ -3,7 +3,7 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 import { Box, Button, Center, Flex, Link, Stack, Text } from "@chakra-ui/react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import useAuth from "../../context/AuthContext";
-import { ReactComponent as LogoSvg } from "../../assets/logo-semibold.svg"
+import { ReactComponent as LogoSvg } from "../../assets/logo-semibold.svg";
 
 const Logo = () => {
   return (
@@ -53,7 +53,10 @@ const NavItemStack = ({ isOpen }: { isOpen: boolean }) => {
               </Center>
             </>
           ) : (
-            <NavItem name="Login" to="/login" />
+            <>
+              <NavItem name="Login" to="/login" />
+              <NavItem name="Register" to="/register" />
+            </>
           )}
         </>
       }

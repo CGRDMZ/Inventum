@@ -19,7 +19,7 @@ namespace Application.Services
         public async Task<ResultWrapper<Guid>> CreateNewUser(CreateNewUserCommand command)
         {
             if(await _applicationUserRepository.FindApplicationUserExistsByUsername(command.Username)) {
-                throw new Exception("User with this name exists already.");
+                return new ResultWrapper<Guid>().AddError("User with this name exists already.");
             }
             ApplicationUser appUser = ApplicationUser.New(command.Username, command.Email, command.Password);
             var result = await _applicationUserRepository.CreateNewApplicationUser(appUser);

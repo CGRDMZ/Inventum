@@ -6,7 +6,7 @@ import useBoards from "../context/BoardsContext";
 import { InvitationDto } from "../models"
 
 const useInvitations = () => {
-    const { user, token } = useAuth();
+    const { token } = useAuth();
     const [invitations, setInvitations] = useState<InvitationDto[]>([]);
     const {refreshBoards} = useBoards();
 

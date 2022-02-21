@@ -44,7 +44,7 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
   const [boardDetails, setBoardDetails] = useState<BoardDetailsDto | null>(
     null
   );
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const { boardId } = useParams();
 
   const toast = useToast();
@@ -244,7 +244,7 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
         setBoardDetails(newState);
         
         // update the backend
-        const res = await transferCardMutation.mutateAsync({
+        await transferCardMutation.mutateAsync({
           fromCardGroupId,
           targetCardGroupId: toCardGroupId,
           cardId,

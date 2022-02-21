@@ -1,3 +1,4 @@
+import { ListItem, UnorderedList, useToast } from "@chakra-ui/react";
 import { JwtPayload } from "jwt-decode";
 import {
   createContext,
@@ -11,7 +12,7 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { authApi } from "../api";
 import useUser, { jwtPayload } from "../hooks/useUser";
-import { LoginDto } from "../models";
+import { LoginDto, RegisterDto, Result } from "../models";
 import { decodeJwt } from "../util";
 
 interface UserInfo {
@@ -23,6 +24,7 @@ interface AuthContextType {
   user?: UserInfo;
   token?: string;
   loading: boolean;
+  register: (dto: RegisterDto) => Promise<Result<string>>;
   // refreshAccessToken: () => void;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
@@ -35,8 +37,15 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
+  const toast = useToast();
+
   const [user, setUser] = useState<UserInfo>();
   const [token, setToken] = useState<string>();
+
+  const registerMutation = useMutation((dto: RegisterDto) => {
+    const res = authApi.register(dto);
+    return res;
+  });
 
   const getAccessTokenMutation = useMutation(
     (loginDto: LoginDto) => {
@@ -55,6 +64,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       username: tokenPayload.given_name,
       userId: tokenPayload.sub,
     });
+  };
+
+  const register = async (dto: RegisterDto) => {
+    const result = await registerMutation.mutateAsync(dto);
+    if (!result.success) {
+      console.log(result);
+
+      const ErrorTitle = ({ errors }: { errors: string[] }) => {
+        return (
+          <UnorderedList>
+            {errors.map((error) => (
+              <ListItem>{error}</ListItem>
+            ))}
+          </UnorderedList>
+        );
+      };
+
+      toast({
+        title: <ErrorTitle errors={result.errors} />,
+        status: "error",
+        duration: 10000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Successfully registered",
+        status: "success",
+        duration: 1500,
+      });
+      navigate("/login");
+    }
+
+    return result;
   };
 
   const login = useCallback(
@@ -128,6 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           user: user,
           token: token,
           loading: getAccessTokenMutation.isLoading,
+          register,
           login: login,
           logout: logout,
         } as AuthContextType

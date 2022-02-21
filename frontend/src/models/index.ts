@@ -65,7 +65,13 @@ export interface InviteUserDto {
 }
 
 export interface Result<T> {
-    data: T;
     success: string;
+    data: T;
     errors: string[];
+}
+
+export interface RegisterDto {
+    username: string;
+    email: string;
+    password: string;
 }
