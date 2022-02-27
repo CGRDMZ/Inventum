@@ -21,8 +21,11 @@ import useAuth from "./AuthContext";
 interface BoardContextProps {
   boardDetails: BoardDetailsDto | null;
   isLoading: boolean;
+  isDragging: boolean;
+  setIsDragging: (isDragging: boolean) => void;
   createCardGroup: (cardGroup: CreateCardGroupDto) => void;
   createCard: (cardGroupId: string, card: CreateCardDto) => void;
+  removeCard: (cardGroupId: string, cardId: string) => void;
   inviteUser: (inviteUser: InviteUserDto) => void;
   refreshBoard: () => void;
   repositionCards: (
@@ -44,6 +47,8 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
   const [boardDetails, setBoardDetails] = useState<BoardDetailsDto | null>(
     null
   );
+  const [isDragging, setIsDraggingState] = useState(false);
+
   const { token } = useAuth();
   const { boardId } = useParams();
 
@@ -201,14 +206,14 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
         // insert the card at the target position
         cardGroup.cards.splice(targetPosition, 0, card);
 
+        setBoardDetails(newState);
+
         // update the backend
         const cardIds = cardGroup.cards.map((val) => val.cardId);
-        repositionCardsMutation.mutateAsync({
+        await repositionCardsMutation.mutateAsync({
           cardGroupId: cardGroup.cardGroupId,
           cardIds,
         });
-
-        setBoardDetails(newState);
       }
     }
   };
@@ -240,9 +245,9 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
 
         // insert the card at the target position
         targetCardGroup.cards.splice(targetPosition, 0, card);
-        
+
         setBoardDetails(newState);
-        
+
         // update the backend
         await transferCardMutation.mutateAsync({
           fromCardGroupId,
@@ -251,15 +256,41 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
         });
 
         const cardIds = targetCardGroup.cards.map((val) => val.cardId);
-        repositionCardsMutation.mutateAsync({
+        await repositionCardsMutation.mutateAsync({
           cardGroupId: targetCardGroup.cardGroupId,
           cardIds,
         });
-        
-        
       }
     }
   };
+
+  const setIsDragging = (isDragging: boolean) => {
+    setIsDraggingState(isDragging);
+  };
+
+  const removeCard = (cardGroupId: string, cardId: string) => {
+    const newState = JSON.parse(
+      JSON.stringify(boardDetails)
+    ) as BoardDetailsDto;
+
+    const cardGroup = newState.cardGroups.find(
+      (val) => val.cardGroupId === cardGroupId
+    );
+
+    if (cardGroup) {
+      const card = cardGroup.cards.find((val) => val.cardId === cardId);
+      if (card) {
+        // remove the dragged card from the list
+        const cardIndex = cardGroup.cards.indexOf(card);
+        cardGroup.cards.splice(cardIndex, 1);
+
+        setBoardDetails(newState);
+
+        // update the backend
+
+      }
+    }
+  }
 
   return (
     <BoardContext.Provider
@@ -267,11 +298,20 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
         boardDetails,
         createCardGroup,
         createCard,
+        removeCard,
         inviteUser,
         refreshBoard,
         repositionCards,
         transferCard,
-        isLoading: false,
+        isLoading:
+          createCardGroupMutation.isLoading ||
+          createCardMutation.isLoading ||
+          inviteUserMutation.isLoading ||
+          repositionCardsMutation.isLoading ||
+          transferCardMutation.isLoading ||
+          isFetching,
+        isDragging: isDragging,
+        setIsDragging
       }}
     >
       {children}

@@ -5,6 +5,8 @@ import {
   Divider,
   Flex,
   HStack,
+  ScaleFade,
+  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -13,6 +15,7 @@ import { useEffect, useState } from "react";
 import {
   DragDropContext,
   Draggable,
+  DragStart,
   Droppable,
   DropResult,
   ResponderProvided,
@@ -20,7 +23,9 @@ import {
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { boardApi } from "../api";
+import DeleteArea from "../components/board-detail/DeleteArea";
 import NewCardGroup from "../components/board-detail/NewCardGroup";
+import NewCardInput from "../components/board-detail/NewCardInput";
 import SideBar from "../components/board-detail/sidebar/SideBar";
 import useAuth from "../context/AuthContext";
 import useBoard, { BoardContextProvider } from "../context/BoardContext";
@@ -59,6 +64,10 @@ const CardGroup = ({
               idx={idx}
             />
           ))}
+        <NewCardInput
+          cardGroupId={cardGroupDto.cardGroupId}
+          idx={cardGroupDto.cards.length}
+        />
       </VStack>
     </Box>
   );
@@ -75,25 +84,28 @@ const Card = ({
   bgColor: string;
   idx: number;
 }) => {
+  const { isLoading } = useBoard();
   return (
-    <Draggable draggableId={cardId} index={idx}>
-      {(provided) => (
-        <Box
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          w={"90%"}
-          py={"2"}
-          px={"2"}
-          bgColor={bgColor}
-          borderRadius={"md"}
-          boxShadow={"md"}
-        >
-          <Text fontFamily={"poppins"} fontWeight={200}>
-            {content}
-          </Text>
-        </Box>
-      )}
+    <Draggable draggableId={cardId} index={idx} isDragDisabled={isLoading}>
+      {(provided, snapshot) => {
+        return (
+          <Box
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            w={"90%"}
+            py={"2"}
+            px={"2"}
+            bgColor={bgColor}
+            borderRadius={"md"}
+            boxShadow={"md"}
+          >
+            <Text fontFamily={"poppins"} fontWeight={200}>
+              {content}
+            </Text>
+          </Box>
+        );
+      }}
     </Draggable>
   );
 };
@@ -103,8 +115,16 @@ const CardGroupList = ({
 }: {
   cardGroupDtos: CardGroupDto[];
 }) => {
+  const { isLoading } = useBoard();
   return (
-    <HStack align={"start"} spacing={"5"} pb="5" overflowX={"scroll"}>
+    <HStack
+      w="100%"
+      position="relative"
+      align={"start"}
+      spacing={"5"}
+      pb="5"
+      overflowX={"scroll"}
+    >
       {cardGroupDtos &&
         cardGroupDtos.map((dto, idx) => (
           <Droppable key={dto.cardGroupId} droppableId={dto.cardGroupId}>
@@ -119,15 +139,30 @@ const CardGroupList = ({
           </Droppable>
         ))}
       <NewCardGroup />
+      {isLoading && (
+        <Box position={"absolute"} top={0} right={0}>
+          <ScaleFade in={isLoading} unmountOnExit>
+            <Spinner />
+          </ScaleFade>
+        </Box>
+      )}
     </HStack>
   );
 };
 
 const BoardDetail = () => {
-  const { boardDetails, repositionCards, transferCard } = useBoard();
+  const { boardDetails, repositionCards, transferCard, setIsDragging, removeCard } =
+    useBoard();
 
   function onDragEnd(result: DropResult, provided: ResponderProvided) {
+    setIsDragging(false);
     if (!result.destination) return;
+
+    if (result.destination?.droppableId === "deleteArea") {
+      console.log(result);
+      removeCard(result.source.droppableId, result.draggableId);
+    }
+
     if (
       result.destination.index === result.source.index &&
       result.destination.droppableId === result.source.droppableId
@@ -143,29 +178,38 @@ const BoardDetail = () => {
       );
     } else {
       // move the card request and then reposition the list.
-      transferCard(result.source.droppableId, result.destination.droppableId, result.draggableId, result.destination.index);
+      transferCard(
+        result.source.droppableId,
+        result.destination.droppableId,
+        result.draggableId,
+        result.destination.index
+      );
     }
   }
 
+  const onDragStart = (initial: DragStart, provided: ResponderProvided) => {
+    setIsDragging(true);
+  };
+
   return (
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Center>
-          <Flex w={"90%"}>
-            <SideBar
-              boardInfo={boardDetails?.boardInfo || null}
-              activities={boardDetails?.activities || null}
-            />
-            {boardDetails?.cardGroups && (
-              <CardGroupList cardGroupDtos={boardDetails.cardGroups} />
-            )}
-          </Flex>
-        </Center>
-      </DragDropContext>
+    <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
+      <Center>
+        <Flex position="relative" w={"90%"}>
+          <DeleteArea />
+          <SideBar
+            boardInfo={boardDetails?.boardInfo || null}
+            activities={boardDetails?.activities || null}
+          />
+          {boardDetails?.cardGroups && (
+            <CardGroupList cardGroupDtos={boardDetails.cardGroups} />
+          )}
+        </Flex>
+      </Center>
+    </DragDropContext>
   );
 };
 
 const BoardDetailWrapper = () => {
-
   return (
     <BoardContextProvider>
       <BoardDetail />

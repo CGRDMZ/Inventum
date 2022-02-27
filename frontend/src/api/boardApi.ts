@@ -64,7 +64,7 @@ export const addCardGroup = async (boardId: string, cardGroupDto: CreateCardGrou
 }
 
 export const addCard = async (boardId: string, cardGroupId: string, cardDto: CreateCardDto, token: string) => {
-    const result = await boardClient.post(`/${boardId}/${cardGroupId}/addCard`, JSON.stringify(cardDto), {
+    const result = await boardClient.post(`/${boardId}/cardGroup/${cardGroupId}/addCard`, JSON.stringify(cardDto), {
         headers: {
             "content-type": "application/json",
             Authorization: `Bearer ${token}`,
