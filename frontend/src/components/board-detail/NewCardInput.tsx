@@ -1,5 +1,6 @@
 import { Box, Input, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { FocusableElement } from "@chakra-ui/utils";
+import { useRef, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import useBoard from "../../context/BoardContext";
 import { CreateCardDto } from "../../models";
@@ -11,16 +12,24 @@ interface Props {
 
 const NewCardInput = ({ cardGroupId, idx }: Props) => {
   const [content, setContent] = useState("");
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const { createCard, isLoading } = useBoard();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const dto: CreateCardDto = {
       content: content,
       bgColor: "#ffffff",
     };
-    createCard(cardGroupId, dto);
+    await createCard(cardGroupId, dto);
     setContent("");
+
+    // not necessary to set a timeout but it's nice to have in case something prevents the focus.
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
   };
 
   return (
@@ -38,6 +47,7 @@ const NewCardInput = ({ cardGroupId, idx }: Props) => {
         >
           <form onSubmit={(e) => handleSubmit(e)}>
             <Input
+              ref={inputRef}
               fontFamily={"poppins"}
               fontStyle="italic"
               fontSize="sm"

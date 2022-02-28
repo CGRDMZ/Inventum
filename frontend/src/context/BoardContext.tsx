@@ -24,7 +24,7 @@ interface BoardContextProps {
   isDragging: boolean;
   setIsDragging: (isDragging: boolean) => void;
   createCardGroup: (cardGroup: CreateCardGroupDto) => void;
-  createCard: (cardGroupId: string, card: CreateCardDto) => void;
+  createCard: (cardGroupId: string, card: CreateCardDto) => Promise<void>;
   removeCard: (cardGroupId: string, cardId: string) => void;
   inviteUser: (inviteUser: InviteUserDto) => void;
   refreshBoard: () => void;
@@ -170,7 +170,7 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
 
   const createCard = async (cardGroupId: string, card: CreateCardDto) => {
     await createCardMutation.mutateAsync({ dto: card, cardGroupId });
-    refetch();
+    await refetch();
   };
 
   const inviteUser = async (dto: InviteUserDto) => {
