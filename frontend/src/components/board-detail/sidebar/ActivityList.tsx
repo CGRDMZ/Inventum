@@ -1,5 +1,7 @@
 import { Box, Button, Stack, Text } from "@chakra-ui/react";
+import moment from "moment";
 import { useState } from "react";
+import { mockComponent } from "react-dom/test-utils";
 import { ActivityDto } from "../../../models";
 
 interface ActivityProps {
@@ -18,7 +20,7 @@ const Activity = ({ activity }: ActivityProps) => {
         fontSize="xs"
         color={"gray.400"}
       >
-        {activity.doneByUser} - {new Date(activity.occuredOn).toLocaleString()}
+        {activity.doneByUser} - { moment(activity.occuredOn).fromNow()}
       </Text>
     </Box>
   );

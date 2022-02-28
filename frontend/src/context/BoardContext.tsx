@@ -314,6 +314,14 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const isMutating =
+    createCardGroupMutation.isLoading ||
+    createCardMutation.isLoading ||
+    inviteUserMutation.isLoading ||
+    repositionCardsMutation.isLoading ||
+    transferCardMutation.isLoading ||
+    removeCardMutation.isLoading;
+
   return (
     <BoardContext.Provider
       value={{
@@ -325,13 +333,7 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
         refreshBoard,
         repositionCards,
         transferCard,
-        isLoading:
-          createCardGroupMutation.isLoading ||
-          createCardMutation.isLoading ||
-          inviteUserMutation.isLoading ||
-          repositionCardsMutation.isLoading ||
-          transferCardMutation.isLoading ||
-          isFetching,
+        isLoading: isMutating || isFetching,
         isDragging: isDragging,
         setIsDragging,
       }}

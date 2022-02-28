@@ -48,7 +48,7 @@ namespace Application.Queries
                 }).ToList(),
                 Activities = board.Activities.OrderByDescending(a => a.OccuredOn).Select(a => new ActivityDto()
                 {
-                    OccuredOn = a.OccuredOn.ToString(),
+                    OccuredOn = a.OccuredOn,
                     DoneByUser = a.DoneBy.Username,
                     Message = a.Message
                 }).ToList()
