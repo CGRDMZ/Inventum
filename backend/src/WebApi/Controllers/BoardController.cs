@@ -252,5 +252,29 @@ namespace WebApi.Controllers
             return Ok(res);
         }
 
+        [HttpDelete("{boardId}/cardGroup/{cardGroupId}/card/{cardId}")]
+        public async Task<IActionResult> removeCard(string boardId, string cardGroupId, string cardId) {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("You better login.");
+            }
+
+            var res = await _mediator.Send(new RemoveCardCommand {
+                UserId = userId,
+                BoardId = boardId,
+                CardGroupId = cardGroupId,
+                CardId = cardId
+            });
+
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+
+            return Ok(res);
+        }
+
     }
 }

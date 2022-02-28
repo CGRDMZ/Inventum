@@ -145,6 +145,24 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
     }
   );
 
+  const removeCardMutation = useMutation(
+    "removeCard",
+    async ({
+      cardGroupId,
+      cardId,
+    }: {
+      cardGroupId: string;
+      cardId: string;
+    }) => {
+      return await boardApi.removeCard(
+        boardDetails!.boardInfo.boardId,
+        cardGroupId,
+        cardId,
+        token!
+      );
+    }
+  );
+
   const createCardGroup = async (cardGroup: CreateCardGroupDto) => {
     await createCardGroupMutation.mutateAsync(cardGroup);
     refetch();
@@ -288,9 +306,13 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
 
         // update the backend
 
+        removeCardMutation.mutateAsync({
+          cardGroupId: cardGroup.cardGroupId,
+          cardId,
+        });
       }
     }
-  }
+  };
 
   return (
     <BoardContext.Provider
@@ -311,7 +333,7 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
           transferCardMutation.isLoading ||
           isFetching,
         isDragging: isDragging,
-        setIsDragging
+        setIsDragging,
       }}
     >
       {children}
