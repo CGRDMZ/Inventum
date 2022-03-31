@@ -1,0 +1,22 @@
+name: Deploy demo
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - backend/**
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: action/checkout@v2
+      - uses: AkhileshNS/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "inventum"
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          use_docker: true
+          appdir: backend
