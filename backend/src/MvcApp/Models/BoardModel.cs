@@ -8,7 +8,7 @@ namespace MvcApp.Models
 
         [RegularExpression("^#(?:[0-9a-fA-F]{3}){1,2}$")]
         public string BgColor { get; init; }
-        
+
         [MinLength(3)]
         public string BoardName { get; init; }
     }

@@ -6,10 +6,10 @@ namespace MvcApp.Models
     {
         [Required]
         public string Username { get; init; }
-        
+
         [Required]
         public string Password { get; init; }
-        
-        
+
+
     }
 }

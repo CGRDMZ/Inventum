@@ -27,7 +27,8 @@ namespace Infrastructure.Identity
             };
             var result = await _userManager.CreateAsync(newAppUser, user.Password);
 
-            var res = new ResultWrapper<Guid>() {
+            var res = new ResultWrapper<Guid>()
+            {
                 Data = newAppUser.Id
             };
 
@@ -43,10 +44,11 @@ namespace Infrastructure.Identity
             return user != null;
         }
 
-        public async Task<ApplicationUser> FindApplicationUserById(string id) {
+        public async Task<ApplicationUser> FindApplicationUserById(string id)
+        {
             var appuser = await _userManager.FindByIdAsync(id);
 
             return ApplicationUser.New(appuser.UserName, appuser.Email, null);
-        } 
+        }
     }
 }

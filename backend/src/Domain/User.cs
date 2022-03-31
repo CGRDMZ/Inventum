@@ -18,10 +18,12 @@ namespace Domain
         private List<Invitation> invitations = new List<Invitation>();
         public IReadOnlyCollection<Invitation> Invitations => invitations.AsReadOnly();
 
-        public User() {}
+        public User() { }
 
-        public User(Guid userId, string username) {
-            if (username.Length < 5) {
+        public User(Guid userId, string username)
+        {
+            if (username.Length < 5)
+            {
                 throw new ArgumentException("Username cannot be smaller than 5 letters.");
             }
 
@@ -29,18 +31,22 @@ namespace Domain
             Username = username;
         }
 
-        public void ReceiveInvitation(Invitation invitation) {
-            if (invitation == null) {
+        public void ReceiveInvitation(Invitation invitation)
+        {
+            if (invitation == null)
+            {
                 throw new ArgumentNullException(nameof(Invitation));
             }
 
             var alreadyOwner = boards.Find(b => b == invitation.InvitedTo) != null;
-            if (alreadyOwner) {
+            if (alreadyOwner)
+            {
                 throw new DomainException("User is already a owner of this board.");
             }
 
             var alreadyInvited = invitations.Find(i => i.InvitedTo == invitation.InvitedTo) != null;
-            if (alreadyInvited) {
+            if (alreadyInvited)
+            {
                 throw new DomainException("User has already received an invitation to this board.");
             }
 
@@ -48,7 +54,8 @@ namespace Domain
             invitations.Add(invitation);
         }
 
-        public void HandleInvitation(Invitation invitation, InvitationResult result) {
+        public void HandleInvitation(Invitation invitation, InvitationResult result)
+        {
             var inv = invitations.Single(i => i == invitation);
 
             inv.Handle(result);
@@ -57,13 +64,15 @@ namespace Domain
 
 
 
-        public void OpenNewBoard() {
+        public void OpenNewBoard()
+        {
             Board board = Board.CreateEmptyBoard(this);
 
             boards.Add(board);
         }
 
-        public static User New(Guid id, string username) {
+        public static User New(Guid id, string username)
+        {
             return new User(id, username);
         }
     }

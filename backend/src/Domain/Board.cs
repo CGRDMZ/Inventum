@@ -39,7 +39,8 @@ namespace Domain
             if (user == null) throw new Exception("User can not be null.");
 
             var existingUsers = owners.Where(u => u.UserId == user.UserId).ToList();
-            if (existingUsers.Count > 0) {
+            if (existingUsers.Count > 0)
+            {
                 throw new DomainException("There is already a owner with this Id");
             }
 
@@ -67,7 +68,8 @@ namespace Domain
             activities.Add(activity);
         }
 
-        public User OwnerWithId(Guid userId) {
+        public User OwnerWithId(Guid userId)
+        {
             return Owners.Where(u => u.UserId == userId).Single();
         }
 

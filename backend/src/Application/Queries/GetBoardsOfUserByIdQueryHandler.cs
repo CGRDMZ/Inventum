@@ -21,7 +21,8 @@ namespace Application.Queries
         {
             var user = await _userRepository.FindByIdAsync(Guid.Parse(request.UserId));
 
-            if (user == null) {
+            if (user == null)
+            {
                 throw new Exception("User not found.");
             }
 
@@ -34,7 +35,8 @@ namespace Application.Queries
 
             foreach (var board in boards)
             {
-                boardDtoList.Add(new BoardDetailsDto() {
+                boardDtoList.Add(new BoardDetailsDto()
+                {
                     BoardId = board.BoardId.ToString(),
                     Name = board.Name,
                     BgColor = board.BgColor.ToString()

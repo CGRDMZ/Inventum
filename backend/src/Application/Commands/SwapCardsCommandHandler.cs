@@ -24,20 +24,23 @@ namespace Application.Commands
             var result = new ResultWrapper<Unit>();
 
             var board = await _boardRepository.FindByIdAsync(Guid.Parse(req.BoardId));
-            if (!board.IsAccessiableBy(Guid.Parse(req.UserId))) {
+            if (!board.IsAccessiableBy(Guid.Parse(req.UserId)))
+            {
                 result.AddError("This user cannot modify this board.");
                 return result;
             }
 
             var cardGroup = board.CardGroups.SingleOrDefault(cg => cg.CardGroupId == Guid.Parse(req.CardGroupId));
-            if (cardGroup == null) {
+            if (cardGroup == null)
+            {
                 result.AddError($"There is no existing card group with this id: {req.CardGroupId}");
                 return result;
             }
 
             var firstCard = cardGroup.Cards.SingleOrDefault(c => c.CardId == Guid.Parse(req.FirstCardId));
             var secondCard = cardGroup.Cards.SingleOrDefault(c => c.CardId == Guid.Parse(req.SecondCardId));
-            if (firstCard == null || secondCard == null) {
+            if (firstCard == null || secondCard == null)
+            {
                 result.AddError($"One of the cards with id {req.FirstCardId} or {req.SecondCardId} does not exist.");
                 return result;
             }

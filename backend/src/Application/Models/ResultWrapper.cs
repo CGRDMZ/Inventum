@@ -11,7 +11,8 @@ namespace Application
         private List<string> errors = new List<string>();
         public IReadOnlyCollection<string> Errors => errors.AsReadOnly();
 
-        public ResultWrapper<TData> AddError(string errorMessage) {
+        public ResultWrapper<TData> AddError(string errorMessage)
+        {
             errors.Add(errorMessage);
             return this;
         }

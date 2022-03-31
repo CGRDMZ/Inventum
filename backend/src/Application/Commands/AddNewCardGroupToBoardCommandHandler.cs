@@ -31,7 +31,8 @@ namespace Application.Commands
                 result.AddError("Only owner can make updates to a board.");
             }
 
-            if (!result.Success) {
+            if (!result.Success)
+            {
                 return result;
             }
 

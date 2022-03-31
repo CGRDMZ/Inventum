@@ -115,7 +115,7 @@ namespace MvcApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Json(new {});
+                return Json(new { });
             }
 
 
@@ -128,7 +128,8 @@ namespace MvcApp.Controllers
                 Accepted = accepted
             });
 
-            if (result.Success) {
+            if (result.Success)
+            {
                 return LocalRedirect("~/Board");
             }
             return Json(result);
@@ -215,11 +216,13 @@ namespace MvcApp.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var res = await _mediator.Send(new RemoveBoardCommand() {
+            var res = await _mediator.Send(new RemoveBoardCommand()
+            {
                 BoardId = id,
                 UserId = userId
             });
-            if (res.Success) {
+            if (res.Success)
+            {
                 return LocalRedirect("~/Board");
             }
 

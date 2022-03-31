@@ -6,9 +6,9 @@ namespace MvcApp.Models
     {
         [MaxLength(60)]
         public string Content { get; init; }
-        
+
         public string BgColor { get; init; }
-        
-        
+
+
     }
 }

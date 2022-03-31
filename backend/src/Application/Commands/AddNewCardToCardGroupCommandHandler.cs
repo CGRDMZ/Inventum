@@ -23,7 +23,8 @@ namespace Application.Commands
 
             var board = await _boardRepository.FindByIdAsync(Guid.Parse(req.BoardId));
 
-            if (!board.IsAccessiableBy(Guid.Parse(req.UserId))) {
+            if (!board.IsAccessiableBy(Guid.Parse(req.UserId)))
+            {
                 return new ResultWrapper<CardDto>()
                                 .AddError("This user cannot add new card to this board.");
             }
@@ -50,8 +51,10 @@ namespace Application.Commands
             await _boardRepository.UpdateAsync(board);
 
 
-            return new ResultWrapper<CardDto>() {
-                Data = new CardDto() {
+            return new ResultWrapper<CardDto>()
+            {
+                Data = new CardDto()
+                {
                     CardId = newCard.CardId.ToString(),
                     Content = newCard.Content,
                     CardColor = newCard.Color.ToString(),

@@ -4,7 +4,8 @@ using MediatR;
 
 namespace Application.Queries
 {
-    public class InvitationsByUserIdQuery : IRequest<List<InvitationDto>>{
+    public class InvitationsByUserIdQuery : IRequest<List<InvitationDto>>
+    {
 
         public string UserId { get; init; }
     }

@@ -8,6 +8,6 @@ namespace Application.Commands
         public string BoardId { get; init; }
         public string CardGroupId { get; init; }
         public string CardId { get; init; }
-        
+
     }
 }

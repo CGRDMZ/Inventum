@@ -15,6 +15,6 @@ namespace MvcApp.Models
         [Required]
         [MinLength(8)]
         public string Password { get; init; }
-        
+
     }
 }

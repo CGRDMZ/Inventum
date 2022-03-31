@@ -253,7 +253,8 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{boardId}/cardGroup/{cardGroupId}/card/{cardId}")]
-        public async Task<IActionResult> removeCard(string boardId, string cardGroupId, string cardId) {
+        public async Task<IActionResult> removeCard(string boardId, string cardGroupId, string cardId)
+        {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)
@@ -261,7 +262,8 @@ namespace WebApi.Controllers
                 return Unauthorized("You better login.");
             }
 
-            var res = await _mediator.Send(new RemoveCardCommand {
+            var res = await _mediator.Send(new RemoveCardCommand
+            {
                 UserId = userId,
                 BoardId = boardId,
                 CardGroupId = cardGroupId,

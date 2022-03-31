@@ -79,6 +79,9 @@ namespace WebApi
             services.AddDbServices<MyIdentityDbContext>(Configuration.GetConnectionString("Postgres"));
 
 
+            services.AddHealthChecks();
+
+
             services.AddIdentityCore<AppUser>().AddEntityFrameworkStores<MyIdentityDbContext>().AddDefaultTokenProviders();
 
             services.AddAuthorization().AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
@@ -156,6 +159,8 @@ namespace WebApi
                 c.SwaggerEndpoint("v1/swagger.json", "WebApi v1");
                 c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true");
             });
+
+            app.UseHealthChecks("/health");
 
 
             app.UseRouting();

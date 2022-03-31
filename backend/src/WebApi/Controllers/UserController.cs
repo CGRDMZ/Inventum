@@ -35,7 +35,8 @@ public class UserController : ControllerBase
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (userId == null) {
+        if (userId == null)
+        {
             return Unauthorized("You better login.");
         }
 
@@ -53,7 +54,8 @@ public class UserController : ControllerBase
 
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (userId == null) {
+        if (userId == null)
+        {
             return Unauthorized("You better login.");
         }
 
@@ -64,7 +66,8 @@ public class UserController : ControllerBase
             Accepted = accept
         });
 
-        if (!res.Success) {
+        if (!res.Success)
+        {
             return BadRequest(res);
         }
 
@@ -100,7 +103,8 @@ public class UserController : ControllerBase
 
         var valid = await _userManager.CheckPasswordAsync(user, req.Password);
 
-        if (valid) {
+        if (valid)
+        {
             var token = _jwtTokenService.GenerateToken(user);
             return Ok(token);
         }

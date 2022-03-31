@@ -9,8 +9,8 @@ namespace Application.Commands
         public string InvitationId { get; init; }
 
         public bool Accepted { get; init; }
-        
-        
+
+
 
     }
 }

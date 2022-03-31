@@ -27,15 +27,19 @@ namespace Application.Commands
             var reqCardIds = req.CardIds.Split(',').Select(id => Guid.Parse(id)).ToHashSet().ToList();
 
             var board = await _boardRepository.FindByIdAsync(Guid.Parse(req.BoardId));
-            if (!board.IsAccessiableBy(Guid.Parse(req.UserId))) {
+            if (!board.IsAccessiableBy(Guid.Parse(req.UserId)))
+            {
                 result.AddError("This user cannot modify this board.");
                 return result;
             }
 
             IEnumerable<Card> cards;
-            try {
+            try
+            {
                 cards = _cardService.GetCards(board, Guid.Parse(req.UserId), Guid.Parse(req.CardGroupId), reqCardIds);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 result.AddError(e.Message);
                 return result;
             }
@@ -58,7 +62,7 @@ namespace Application.Commands
             });
 
             // Adding the activity
-            var cardGroupName = board.CardGroups.Single( cg => cg.CardGroupId == Guid.Parse(req.CardGroupId)).Name;
+            var cardGroupName = board.CardGroups.Single(cg => cg.CardGroupId == Guid.Parse(req.CardGroupId)).Name;
             var user = board.OwnerWithId(Guid.Parse(req.UserId));
             var activity = Activity.New(user, $"Cards in the group named \"{cardGroupName}\" are repositioned.", board);
             board.AddActivity(activity);

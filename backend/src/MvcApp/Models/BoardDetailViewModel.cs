@@ -9,7 +9,7 @@ namespace MvcApp.Models
         public CreateCardGroupModel CreateCardGroupModel { get; init; }
 
         public CreateNewCardModel CreateNewCardModel { get; init; }
-        
+
         public InviteUserModel InviteUserModel { get; init; }
 
     }

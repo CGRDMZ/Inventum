@@ -16,7 +16,7 @@ namespace Application.Commands
         public RemoveBoardCommandHandler(IBoardRepository boardRepository)
         {
             _boardRepository = boardRepository;
-            
+
         }
         public async Task<ResultWrapper<Unit>> Handle(RemoveBoardCommand req, CancellationToken cancellationToken)
         {
@@ -29,7 +29,7 @@ namespace Application.Commands
                 return result;
             }
 
-            await _boardRepository.DeleteAsync(board.BoardId); 
+            await _boardRepository.DeleteAsync(board.BoardId);
 
             return result;
         }

@@ -14,11 +14,11 @@ namespace Application.Commands
         private readonly IBoardRepository _boardRepository;
         private readonly ICardService _cardService;
 
-       public RemoveCardCommandHandler(IBoardRepository boardRepository, ICardService cardService)
+        public RemoveCardCommandHandler(IBoardRepository boardRepository, ICardService cardService)
         {
             _boardRepository = boardRepository;
             _cardService = cardService;
-        } 
+        }
 
         public async Task<ResultWrapper<Unit>> Handle(RemoveCardCommand req, CancellationToken cancellationToken)
         {
@@ -37,7 +37,7 @@ namespace Application.Commands
             var user = board.OwnerWithId(Guid.Parse(req.UserId));
             var activity = Activity.New(user, $"Card with the content \"{card.Content}\" was deleted.", board);
             board.AddActivity(activity);
-            
+
             card.RemoveFromGroup();
 
             await _boardRepository.UpdateAsync(board);

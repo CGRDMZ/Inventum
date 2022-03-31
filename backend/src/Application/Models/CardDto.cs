@@ -6,7 +6,7 @@ namespace Application.Models
         public string Content { get; init; }
         public string CardColor { get; init; }
         public int Position { get; init; }
-        
-        
+
+
     }
 }

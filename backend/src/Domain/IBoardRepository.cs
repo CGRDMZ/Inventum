@@ -1,3 +1,4 @@
-namespace Domain {
-    public interface IBoardRepository: IAsyncRepository<Board> {}
+namespace Domain
+{
+    public interface IBoardRepository : IAsyncRepository<Board> { }
 }

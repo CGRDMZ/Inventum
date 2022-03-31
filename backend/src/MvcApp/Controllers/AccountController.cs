@@ -24,7 +24,7 @@ namespace MvcApp.Controllers
             _mediator = mediator;
             _signInManager = signInManager;
         }
-        
+
         [Authorize]
         public IActionResult Index()
         {

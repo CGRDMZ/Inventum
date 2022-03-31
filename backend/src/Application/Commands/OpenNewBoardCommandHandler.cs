@@ -35,7 +35,8 @@ namespace Application.Commands
                 board.ChangeNameTo(command.Name);
             }
 
-            if (command.BgColor != null) {
+            if (command.BgColor != null)
+            {
                 board.ChangeColorTo(Color.FromHexCode(command.BgColor));
             }
 
