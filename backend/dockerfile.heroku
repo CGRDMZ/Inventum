@@ -1,0 +1,25 @@
+# https://hub.docker.com/_/microsoft-dotnet
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+
+
+# copy csproj and restore as distinct layers
+COPY IdeaMS.sln IdeaMS.sln
+COPY src/Application/Application.csproj src/Application/Application.csproj
+COPY src/Domain/Domain.csproj src/Domain/Domain.csproj
+COPY src/Infrastructure/Infrastructure.csproj src/Infrastructure/Infrastructure.csproj
+COPY src/MvcApp/MvcApp.csproj src/MvcApp/MvcApp.csproj
+COPY src/WebApi/WebApi.csproj src/WebApi/WebApi.csproj
+RUN dotnet restore
+
+# copy everything else and build app
+COPY . .
+WORKDIR /src/WebApi/
+RUN dotnet publish -c release -o /out
+
+# final stage/image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+
+WORKDIR /app
+EXPOSE 80
+COPY --from=build /out .
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet WebApi.dll
