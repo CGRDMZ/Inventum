@@ -3,7 +3,7 @@ name: Deploy demo
 on:
   push:
     branches:
-      - master
+      - demo
     paths:
       - backend/**
 
