@@ -19,9 +19,9 @@ RUN dotnet publish -c release -o /out
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
-ENV DEPLOY_HEROKU=true
+ENV 
 
 WORKDIR /app
 EXPOSE 80
 COPY --from=build /out .
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet WebApi.dll
+CMD DEPLOY_HEROKU=true ASPNETCORE_URLS=http://*:$PORT dotnet WebApi.dll
