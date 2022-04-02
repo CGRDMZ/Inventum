@@ -61,6 +61,22 @@ namespace WebApi.Controllers
             return Ok(res);
         }
 
+        [HttpGet("{boardId}/activities")]
+        public async Task<IActionResult> GetBoardActivities(string boardId, int page = 1, int limit = 10)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var res = await _mediator.Send(new GetBoardActivitiesByIdQuery
+            {
+                UserId = userId,
+                BoardId = boardId,
+                Page = page,
+                Limit = limit,
+            });
+
+            return Ok(res);
+        }
+
         [HttpPost("createBoard")]
         public async Task<IActionResult> CreateBoard([FromBody] CreateBoardRequest req)
         {
