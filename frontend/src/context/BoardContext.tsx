@@ -68,7 +68,7 @@ export const BoardContextProvider = ({ children }: { children: ReactNode }) => {
 
       setBoardDetails(jsonData);
     }
-  }, [data, isFetching]);
+  }, [data]);
 
   const createCardGroupMutation = useMutation(
     "createCardGroup",
