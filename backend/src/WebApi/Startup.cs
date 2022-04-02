@@ -28,6 +28,7 @@ using WebApi.Services;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.HttpOverrides;
+using Npgsql;
 
 namespace WebApi
 {
@@ -74,6 +75,8 @@ namespace WebApi
 
             services.AddMediatR(typeof(OpenNewBoardCommandHandler));
 
+            var connectionString = Environment.GetEnvironmentVariable("DEPLOY_HEROKU") == "true" ? ParseHerokuDatabaseUrl(Environment.GetEnvironmentVariable("DATABASE_URL")) : Configuration.GetConnectionString("postgres");
+
 
             services.AddDbServices<ApplicationDbContext>(Configuration.GetConnectionString("Postgres"));
             services.AddDbServices<MyIdentityDbContext>(Configuration.GetConnectionString("Postgres"));
@@ -118,6 +121,28 @@ namespace WebApi
 
             services.AddTransient<ICardLocationService, CardLocationService>();
             services.AddMediatR(typeof(OpenNewBoardCommandHandler));
+        }
+
+        private string ParseHerokuDatabaseUrl(string url)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri databaseUri)) {
+                throw new ArgumentException("Invalid URL", nameof(url));
+            }
+
+            var userInfo = databaseUri.UserInfo.Split(':');
+
+            var builder = new NpgsqlConnectionStringBuilder
+            {
+                Host = databaseUri.Host,
+                Port = databaseUri.Port,
+                Username = userInfo[0],
+                Password = userInfo[1],
+                Database = databaseUri.LocalPath.TrimStart('/'),
+                SslMode = SslMode.Require,
+                TrustServerCertificate=true
+            };
+
+            return builder.ToString();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
