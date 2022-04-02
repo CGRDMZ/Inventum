@@ -19,8 +19,6 @@ RUN dotnet publish -c release -o /out
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
-ENV 
-
 WORKDIR /app
 EXPOSE 80
 COPY --from=build /out .
