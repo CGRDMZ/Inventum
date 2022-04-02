@@ -78,8 +78,8 @@ namespace WebApi
             var connectionString = Environment.GetEnvironmentVariable("DEPLOY_HEROKU") == "true" ? ParseHerokuDatabaseUrl(Environment.GetEnvironmentVariable("DATABASE_URL")) : Configuration.GetConnectionString("postgres");
 
 
-            services.AddDbServices<ApplicationDbContext>(Configuration.GetConnectionString("Postgres"));
-            services.AddDbServices<MyIdentityDbContext>(Configuration.GetConnectionString("Postgres"));
+            services.AddDbServices<ApplicationDbContext>(connectionString);
+            services.AddDbServices<MyIdentityDbContext>(connectionString);
 
 
             services.AddHealthChecks();
