@@ -46,7 +46,7 @@ namespace Application.Queries
                         Position = c.Position
                     }).OrderBy(c => c.Position).ToList()
                 }).ToList(),
-                Activities = board.Activities.OrderByDescending(a => a.OccuredOn).Select(a => new ActivityDto()
+                Activities = board.Activities.OrderByDescending(a => a.OccuredOn).Take(10).Select(a => new ActivityDto()
                 {
                     OccuredOn = a.OccuredOn,
                     DoneByUser = a.DoneBy.Username,
