@@ -112,6 +112,7 @@ namespace WebApi
 
             services.AddTransient<IBoardRepository, BoardRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICardRepository, CardRepository>();
             services.AddTransient<IApplicationUserRepository, EfIdentityUserRepository>();
 
             services.AddTransient<IUserService, UserService>();
@@ -125,7 +126,8 @@ namespace WebApi
 
         private string ParseHerokuDatabaseUrl(string url)
         {
-            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri databaseUri)) {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri databaseUri))
+            {
                 throw new ArgumentException("Invalid URL", nameof(url));
             }
 
@@ -139,7 +141,7 @@ namespace WebApi
                 Password = userInfo[1],
                 Database = databaseUri.LocalPath.TrimStart('/'),
                 SslMode = SslMode.Require,
-                TrustServerCertificate=true
+                TrustServerCertificate = true
             };
 
             return builder.ToString();
@@ -157,7 +159,10 @@ namespace WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
 
+            if (Environment.GetEnvironmentVariable("DEPLOY_HEROKU") == "true")
+            {
                 // make domain migrations
                 using (var scope = app.ApplicationServices.CreateScope())
                 {
@@ -177,6 +182,7 @@ namespace WebApi
                     }
                 }
             }
+
             app.UsePathBase("/api");
             app.UseSwagger();
             app.UseSwaggerUI(c =>
