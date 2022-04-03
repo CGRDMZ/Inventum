@@ -1,5 +1,6 @@
 using System;
 using Domain;
+using Domain.CardComponents;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
@@ -27,6 +28,10 @@ namespace Infrastructure
             modelBuilder.Entity<Card>().Property(c => c.CardId).IsRequired().ValueGeneratedNever();
 
             modelBuilder.Entity<Activity>().Property(a => a.ActivityId).IsRequired().ValueGeneratedNever();
+
+            modelBuilder.Entity<CheckListComponent>().Property(c => c.CheckListComponentId).IsRequired().ValueGeneratedNever();
+
+            modelBuilder.Entity<CheckListItem>().Property(c => c.CheckListItemId).IsRequired().ValueGeneratedNever();
 
             modelBuilder.Entity<User>().HasIndex(u => u.Username);
 
