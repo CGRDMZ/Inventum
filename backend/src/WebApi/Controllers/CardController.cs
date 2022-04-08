@@ -1,3 +1,4 @@
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Commands;
@@ -46,6 +47,27 @@ public class CardController : ControllerBase
             CardId = cardId,
             Name = req.Name
         });
+
+        return Ok(res);
+    }
+
+    [HttpPost("{cardId}/checklist/{checkListId}/addItem")]
+    public async Task<IActionResult> AddCheckListItem(string cardId, string checkListId, AddCheckListItemRequest req) {
+
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        var res = await _mediator.Send(new AddCheckListItemCommand
+        {
+            UserId = userId,
+            CardId = Guid.Parse(cardId),
+            CheckListId = Guid.Parse(checkListId),
+            Content = req.Content
+        });
+
+        if (!res.Success)
+        {
+            return BadRequest(res);
+        }
 
         return Ok(res);
     }
