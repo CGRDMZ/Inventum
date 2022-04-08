@@ -71,4 +71,25 @@ public class CardController : ControllerBase
 
         return Ok(res);
     }
+
+    [HttpPost("{cardId}/checklist/{checkListId}/item/{checkListItemId}/toggle")]
+    public async Task<IActionResult> ToggleCheckListItem(string cardId, string checkListId, string checkListItemId) {
+
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        var res = await _mediator.Send(new ToggleCheckListItemCommand
+        {
+            UserId = userId,
+            CardId = Guid.Parse(cardId),
+            CheckListId = Guid.Parse(checkListId),
+            CheckListItemId = Guid.Parse(checkListItemId)
+        });
+
+        if (!res.Success)
+        {
+            return BadRequest(res);
+        }
+
+        return Ok(res);
+    }
 }
