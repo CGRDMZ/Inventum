@@ -38,7 +38,7 @@ namespace Domain.CardComponents
             return lastCard == null ? 0 : lastCard.Position + 1;
         }
 
-        public void moveItem(CheckListItem item, int newPosition)
+        public void MoveItem(CheckListItem item, int newPosition)
         {
             if (item == null) throw new Exception("Item can not be null.");
 
