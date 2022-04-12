@@ -6,6 +6,7 @@ namespace Application.Models
     {
         public string CardId { get; init; }
         public string Content { get; init; }
+        public string Description { get; init; }
         public string CardColor { get; init; }
         public int Position { get; init; }
 
