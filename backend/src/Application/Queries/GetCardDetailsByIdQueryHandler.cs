@@ -29,6 +29,7 @@ public class GetCardDetailsByIdQueryHandler : IRequestHandler<GetCardDetailsById
         {
             CardId = card.CardId.ToString(),
             Content = card.Content,
+            Description = card.Description,
             CardColor = card.Color.ToString(),
             Position = card.Position,
             CheckListComponents = card.CheckListComponents
