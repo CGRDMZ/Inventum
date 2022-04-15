@@ -1,7 +1,9 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Application;
 using Application.Commands;
+using Application.Models;
 using Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +25,7 @@ public class CardController : ControllerBase
     }
 
     [HttpGet("{cardId}")]
+    [ProducesResponseType(typeof(CardWithComponentsDto), 200)]
     public async Task<IActionResult> GetCardDetail(string cardId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -73,6 +76,7 @@ public class CardController : ControllerBase
     }
 
     [HttpPost("{cardId}/checklist/{checkListId}/item/{checkListItemId}/toggle")]
+    [ProducesResponseType(typeof(ResultWrapper<Unit>), 200)]
     public async Task<IActionResult> ToggleCheckListItem(string cardId, string checkListId, string checkListItemId) {
 
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
