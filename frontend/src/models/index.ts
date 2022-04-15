@@ -75,3 +75,25 @@ export interface RegisterDto {
     email: string;
     password: string;
 }
+
+export interface CheckListItemDto {
+    checklistItemId: string;
+    content: string;
+    isChecked: boolean;
+    position: number;
+}
+
+export interface CheckListComponentDto {
+    checkListComponentId: string;
+    name: string;
+    checkListItems: CheckListItemDto[];
+}
+
+export interface CardWithComponentsDto {
+    cardId: string;
+    content: string;
+    description: string;
+    cardColor: string;
+    position: number;
+    checkListComponents: CheckListComponentDto[];
+}

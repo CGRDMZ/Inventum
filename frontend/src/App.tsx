@@ -10,6 +10,7 @@ import Navbar from "./components/navbar/Navbar";
 import Register from "./pages/Register";
 import { AuthProvider } from "./context/AuthContext";
 import { BoardsProvider } from "./context/BoardsContext";
+import { CardContextProvider } from "./context/CardContext";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <BoardsProvider>
+            <CardContextProvider>
             <Navbar />
             <Routes>
               <Route path="/home" element={<Home />} />
@@ -26,6 +28,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="*" element={<Navigate to={"/home"} />} />
             </Routes>
+            </CardContextProvider>
           </BoardsProvider>
         </AuthProvider>
       </BrowserRouter>

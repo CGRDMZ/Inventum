@@ -1,7 +1,9 @@
-import { CheckIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon, CheckIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Checkbox,
+  Flex,
   Grid,
   GridItem,
   Heading,
@@ -16,6 +18,8 @@ import {
 } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
 import useBoard from "../../context/BoardContext";
+import useCard from "../../context/CardContext";
+import CheckListItem from "./CheckListItem";
 
 const Card = ({
   cardId,
@@ -28,6 +32,7 @@ const Card = ({
   bgColor: string;
   idx: number;
 }) => {
+  const { cardDto, isLoading: isLoadingCard, changeCard } = useCard();
   const { isLoading } = useBoard();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -46,7 +51,10 @@ const Card = ({
               boxShadow={"md"}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
-              onClick={onOpen}
+              onClick={() => {
+                onOpen();
+                changeCard(cardId);
+              }}
             >
               <Text fontFamily={"poppins"} fontWeight={200}>
                 {content}
@@ -63,37 +71,62 @@ const Card = ({
       >
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent minH="96" bgColor={bgColor}>
-          <ModalHeader>{content}</ModalHeader>
+          <ModalHeader>{cardDto?.content}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Grid templateColumns="2fr 1fr" gap={1}>
               <GridItem w="95%">
                 <Box minH="48" overflowY="auto">
-                  <Box bgColor="white" borderRadius="md" shadow="md" p={1}>
-                    <Text fontFamily="poppins" fontSize="sm">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Dolore provident adipisci nihil aperiam minima harum et
-                      dolorem corporis repudiandae, veniam facere sed cum
-                      impedit corrupti dolores maiores exercitationem ullam.
-                      Nihil.
-                    </Text>
-                  </Box>
+                  {cardDto?.description && (
+                    <>
+                      <Text fontFamily="poppins" fontSize="sm">
+                        Description
+                      </Text>
+                      <Box
+                        mb="3"
+                        bgColor="white"
+                        borderRadius="md"
+                        shadow="md"
+                        p={1}
+                      >
+                        <Text fontFamily="poppins" fontSize="sm">
+                          {cardDto?.description}
+                        </Text>
+                      </Box>
+                    </>
+                  )}
+
+                  {cardDto?.checkListComponents.map((comp) => (
+                    <>
+                      <Box
+                        mb="3"
+                        px="2"
+                        py="2"
+                        mx="2"
+                        mt="1"
+                        bgColor="white"
+                        borderRadius="md"
+                        shadow="md"
+                      >
+                        <Text fontFamily="poppins" fontWeight="bold">
+                          {comp.name}
+                        </Text>
+                        {comp.checkListItems.map((item) => (
+                          <CheckListItem content={item.content} isChecked={item.isChecked} onClick={() => {}} />
+                        ))}
+                      </Box>
+                    </>
+                  ))}
                 </Box>
               </GridItem>
               <GridItem w="100%" minH="48">
+                <Text fontFamily="poppins" fontSize="md">
+                  Add Component
+                </Text>
                 <Box shadow="md" p="3" borderRadius="md" bgColor="white">
-                  <Text
-                    fontFamily="poppins"
-                    fontSize="md"
-                    fontWeight="light"
-                    fontStyle="italic"
-                  >
-                    Add Component
-                  </Text>
                   <Button
                     variant="solid"
                     mr="1"
-                    mb="1"
                     size="sm"
                     title="Add a checklist component!"
                   >
