@@ -20,7 +20,7 @@ export const getCard = async (cardId: string, token: string) => {
 }
 
 export const toggleChecklistItem = async (cardId: string, checklistId: string, checklistItemId: string, token: string) => {
-    const res = await cardClient.post<Result<{}>>(`/${cardId}/checklist/${checklistId}/item/${checklistItemId}/toggle`, {
+    const res = await cardClient.post<Result<{}>>(`/${cardId}/checklist/${checklistId}/item/${checklistItemId}/toggle`, {}, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -29,12 +29,25 @@ export const toggleChecklistItem = async (cardId: string, checklistId: string, c
     return { data: res.data, status: res.status };
 };
 
-export const createChecklistItemComponent = async (cardId: string, token: string, name: string) =>{
-    const res = await cardClient.post<Result<{}>>(`/${cardId}/addChecklist`, {
+export const createChecklistItemComponent = async (cardId: string, token: string, name: string) => {
+    const res = await cardClient.post<Result<{}>>(`/${cardId}/addChecklist`, { name }, {
         headers: {
             Authorization: `Bearer ${token}`
         }
     });
+
+    return { data: res.data, status: res.status };
+}
+
+export const createChecklistItem = async (cardId: string, checklistId: string, content: string, token: string) => {
+    const res = await cardClient.post<Result<{}>>(`/${cardId}/checklist/${checklistId}/addItem`, {
+        content,
+    },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
     return { data: res.data, status: res.status };
 }

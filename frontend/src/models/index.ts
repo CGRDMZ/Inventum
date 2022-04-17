@@ -77,7 +77,7 @@ export interface RegisterDto {
 }
 
 export interface CheckListItemDto {
-    checklistItemId: string;
+    checkListItemId: string;
     content: string;
     isChecked: boolean;
     position: number;

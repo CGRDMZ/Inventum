@@ -33,7 +33,7 @@ public class CardRepository : ICardRepository
     {
         return await _context.Cards
                             .Include(c => c.CheckListComponents.Where(c => !c.IsDeleted))
-                            .ThenInclude(c => c.CheckListItems.Where(i => !i.IsDeleted))
+                            .ThenInclude(c => c.CheckListItems.Where(i => !i.IsDeleted).OrderBy(i => i.Position))
                             .FirstAsync(c => c.CardId == id);
     }
 

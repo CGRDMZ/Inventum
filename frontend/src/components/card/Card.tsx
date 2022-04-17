@@ -19,6 +19,7 @@ import {
 import { Draggable } from "react-beautiful-dnd";
 import useBoard from "../../context/BoardContext";
 import useCard from "../../context/CardContext";
+import CheckList from "./CheckList";
 import CheckListItem from "./CheckListItem";
 
 const Card = ({
@@ -32,7 +33,7 @@ const Card = ({
   bgColor: string;
   idx: number;
 }) => {
-  const { cardDto, isLoading: isLoadingCard, changeCard } = useCard();
+  const { cardDto, isLoading: isLoadingCard, changeCard, addCheckList } = useCard();
   const { isLoading } = useBoard();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -97,25 +98,7 @@ const Card = ({
                   )}
 
                   {cardDto?.checkListComponents.map((comp) => (
-                    <>
-                      <Box
-                        mb="3"
-                        px="2"
-                        py="2"
-                        mx="2"
-                        mt="1"
-                        bgColor="white"
-                        borderRadius="md"
-                        shadow="md"
-                      >
-                        <Text fontFamily="poppins" fontWeight="bold">
-                          {comp.name}
-                        </Text>
-                        {comp.checkListItems.map((item) => (
-                          <CheckListItem content={item.content} isChecked={item.isChecked} onClick={() => {}} />
-                        ))}
-                      </Box>
-                    </>
+                    <CheckList key={comp.checkListComponentId} dto={comp} />
                   ))}
                 </Box>
               </GridItem>
@@ -129,6 +112,7 @@ const Card = ({
                     mr="1"
                     size="sm"
                     title="Add a checklist component!"
+                    onClick={() => addCheckList()}
                   >
                     <CheckIcon />
                   </Button>

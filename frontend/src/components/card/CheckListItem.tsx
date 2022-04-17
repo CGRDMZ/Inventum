@@ -1,33 +1,51 @@
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import { Checkbox, Flex, Text } from "@chakra-ui/react";
-import { FC, MouseEvent } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
+import { useMutation } from "react-query";
+import { cardApi } from "../../api";
+import useCard from "../../context/CardContext";
+import { CheckListItemDto } from "../../models";
 
 interface Props {
-  isChecked: boolean;
-  content: string;
-  onClick: () => void;
+  dto: CheckListItemDto,
+  checkListId: string;
+  onClick?: () => void;
 }
 
-const CheckListItem: FC<Props> = ({ isChecked, content, onClick }) => {
-  const onItemClick = (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    onClick();
+const CheckListItem: FC<Props> = ({ dto, checkListId, onClick }) => {
+  const [localCheckState, setLocalCheckState] = useState(false);
+  const [updating, SetUpdating] = useState(false);
+
+  const { toggleItem } = useCard();
+
+  
+
+  useEffect(() => {
+      setLocalCheckState(dto.isChecked);
+  }, [dto.isChecked]);
+
+  const onItemClick = (e: ChangeEvent<HTMLInputElement>) => {
+    setLocalCheckState(!localCheckState);
+    console.log("wtf");
+    toggleItem(checkListId, dto.checkListItemId);
+    
+    onClick && onClick();
   };
+
   return (
     <Flex
       alignItems="center"
       justifyContent="space-between"
       _hover={{ bgColor: "gray.100" }}
     >
-      <Text flexGrow="1" as={isChecked ? "del" : undefined}>
-        {content}
+      <Text flexGrow="1" as={localCheckState ? "del" : undefined}>
+        {dto.content}
       </Text>
       <Checkbox
         size="lg"
         colorScheme="green"
-        isChecked={isChecked}
-        onClick={onItemClick}
-        icon={<CheckCircleIcon w="4" h="4" />}
+        isChecked={localCheckState}
+        onChange={onItemClick}
       />
     </Flex>
   );
