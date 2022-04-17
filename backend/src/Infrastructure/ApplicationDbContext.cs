@@ -43,6 +43,10 @@ namespace Infrastructure
 
             modelBuilder.Entity<Board>().HasMany<CardGroup>(b => b.CardGroups).WithOne().OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Card>().HasMany<CheckListComponent>(c => c.CheckListComponents).WithOne(c => c.BelongsTo).OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CheckListComponent>().HasMany<CheckListItem>(c => c.CheckListItems).WithOne(i => i.BelongsTo).OnDelete(DeleteBehavior.Cascade);
+
 
 
 

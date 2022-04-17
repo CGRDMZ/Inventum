@@ -3,15 +3,17 @@ using System;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220417165547_CardComponentCascadeFix3")]
+    partial class CardComponentCascadeFix3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,6 +111,12 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("BelongsToCardId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CardId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CardId1")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -119,6 +127,10 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("BelongsToCardId");
 
+                    b.HasIndex("CardId");
+
+                    b.HasIndex("CardId1");
+
                     b.ToTable("CheckListComponent");
                 });
 
@@ -128,6 +140,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("BelongsToCheckListComponentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CheckListComponentId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Content")
@@ -145,6 +160,8 @@ namespace Infrastructure.Migrations
                     b.HasKey("CheckListItemId");
 
                     b.HasIndex("BelongsToCheckListComponentId");
+
+                    b.HasIndex("CheckListComponentId");
 
                     b.ToTable("CheckListItem");
                 });
@@ -302,8 +319,17 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.CardComponents.CheckListComponent", b =>
                 {
                     b.HasOne("Domain.Card", "BelongsTo")
-                        .WithMany("CheckListComponents")
+                        .WithMany()
                         .HasForeignKey("BelongsToCardId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Card", null)
+                        .WithMany("CheckListComponents")
+                        .HasForeignKey("CardId");
+
+                    b.HasOne("Domain.Card", null)
+                        .WithMany()
+                        .HasForeignKey("CardId1")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("BelongsTo");
@@ -312,9 +338,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.CardComponents.CheckListItem", b =>
                 {
                     b.HasOne("Domain.CardComponents.CheckListComponent", "BelongsTo")
-                        .WithMany("CheckListItems")
+                        .WithMany()
                         .HasForeignKey("BelongsToCheckListComponentId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.CardComponents.CheckListComponent", null)
+                        .WithMany("CheckListItems")
+                        .HasForeignKey("CheckListComponentId");
 
                     b.Navigation("BelongsTo");
                 });
