@@ -11,6 +11,8 @@ namespace Domain.CardComponents
 
         public bool IsDeleted { get; private set; }
 
+        public Card BelongsTo { get; private set; }
+
         private List<CheckListItem> checkListItems = new List<CheckListItem>();
         public IReadOnlyCollection<CheckListItem> CheckListItems => checkListItems.AsReadOnly();
 
