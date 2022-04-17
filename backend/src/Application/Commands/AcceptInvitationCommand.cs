@@ -10,7 +10,5 @@ namespace Application.Commands
 
         public bool Accepted { get; init; }
 
-
-
     }
 }
