@@ -18,7 +18,7 @@
     <br />
     <!-- <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a> -->
     <br />
-    <a href="https://inventum-spa-cgrdmz.vercel.app" target="_blank" rel="noreferrer noopener">View Demo</a>
+    <a href="https://inventum-spa-cgrdmz.vercel.app" target="_blank" rel="noreferrer noopener">View Demo (backend not working because heroku :()</a>
     ·
     <a href="https://github.com/CGRDMZ/Inventum/issues">Report Bug</a>
     ·
